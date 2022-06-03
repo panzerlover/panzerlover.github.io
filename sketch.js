@@ -19,7 +19,7 @@ function addSliders(){
   .position(10, 27)
   .style('font-family', "Ubuntu-Light")
   .style('font-size:16px')
-  .style('line-height:130%');
+  .style('line-height:100%');
 
   Heights = createDiv("Height");
   Heights.position(150, 10);
@@ -53,7 +53,7 @@ function addSliders(){
   .position(10, Heights.size().height + 30)
   .style('font-family', "Ubuntu-Light")
   .style('font-size:16px')
-  .style('line-height:130%');
+  .style('line-height:100%');
 
   Widths = createDiv("Width");
   Widths.position(150, Heights.size().height + 10);
@@ -93,7 +93,7 @@ function addSliders(){
   .size(100)
   .style('font-family', "Ubuntu-Light")
   .style('font-size:16px')
-  .style('line-height:130%');
+  .style('line-height:100%');
 
   Depths = createDiv("Depths");
   Depths.position(150, Heights.size().height + Widths.size().height + 10);
