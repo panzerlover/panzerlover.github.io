@@ -1,4 +1,4 @@
-// const drawGlacis = require("./glacis");
+
 let tank = {
   y:0,
   x:0,
@@ -462,7 +462,7 @@ const drawFront = {
 }
 
 function preload(){
-font = loadFont("../assets/Ubuntu-Light.ttf");
+font = loadFont("Ubuntu-Light.ttf");
 }
 
 function setup() {
