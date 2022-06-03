@@ -107,7 +107,7 @@ function addSliders(){
   bumperTopDepth.parent(Depths);
   bumperBottomDepth = createSlider(-250, 250, 0, 5);
   bumperBottomDepth.parent(Depths);
-  bottomPlateDepth = createSlider(-250, 250, 80, 5);
+  bottomPlateDepth = createSlider(-250, 250, 0, 5);
   bottomPlateDepth.parent(Depths);
   overallDepth = createSlider(0, 500, 200, 5);
   overallDepth.parent(Depths);
@@ -621,12 +621,12 @@ function draw() {
       tank.z-(glacisTopWidth.value()  + waistWidth.value() + (((bumperWidth.value() - glacisTopWidth.value()) ) * wingGlacisPercent.value() + wingBottomWidth.value())*Math.ceil(wingGlacisPercent.value()) ),
     ],
     glacisBottomLeft: [
-      tank.x-(bumperTopDepth.value()+(((bumperBottomDepth.value()*bumperPikeHeight.value())/(bumperPikeHeight.value()+bumperHeight.value()))*pikeAndSlope)),
+      tank.x-(bumperTopDepth.value()+((bumperBottomDepth.value()*bumperPikeHeight.value())/(bumperPikeHeight.value()+bumperHeight.value()))*pikeAndSlope),
       tank.y-(bottomPlateHeight.value()+bumperHeight.value()), 
       tank.z-bumperWidth.value() 
     ],
     glacisBottomRight: [
-      tank.x-(bumperTopDepth.value()+(((bumperBottomDepth.value()*bumperPikeHeight.value())/(bumperPikeHeight.value()+bumperHeight.value()))*pikeAndSlope)),
+      tank.x-(bumperTopDepth.value()+((bumperBottomDepth.value()*bumperPikeHeight.value())/(bumperPikeHeight.value()+bumperHeight.value()))*pikeAndSlope),
       tank.y-(bottomPlateHeight.value()+bumperHeight.value()), 
       tank.z+bumperWidth.value() 
     ],
