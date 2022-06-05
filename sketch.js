@@ -1,3 +1,4 @@
+// import { fromContainer } from "./draw/draw-front";
 
 let tank = {
   y:0,
@@ -126,6 +127,24 @@ function addSliders(){
   wingGlacisPercent.parent(Depths);
  
 
+}
+function addChecks(){
+  orbitControlCheck = createCheckbox(
+    "Enable Orbit Control", true);
+  orbitControlCheck.position(900, 10);
+  orbitControlCheck.changed(orbitControlEvent);
+  orbitControlCheck.style('font-family', "Ubuntu-Light");
+
+  noFillCheck = createCheckbox(
+    "Wire Frame View", false);
+  noFillCheck.position(900, 30);
+  noFillCheck.changed(noFillEvent);
+  noFillCheck.style('font-family', "Ubuntu-Light");
+
+  showTreads = createCheckbox(
+    "Show Treads", true);
+  showTreads.position(900, 50);
+  showTreads.style("font-family", "Ubuntu-Light");
 }
 const drawFront = {
   Glacis : (points)=>{
@@ -513,32 +532,27 @@ const drawFront = {
     
 
 }
-}
+};
+const drawTreads = {
+  frontSprocket: (points) => {
+    let thickness = 30;
+    translate(points.bumperBottomLeft[0], points.bumperBottomLeft[1], points.glacisWingLeftPit[2]-(thickness/2));
+    rotateX(90);
+    cylinder(20, thickness);
+  },
+};
 
 function preload(){
 font = loadFont("Ubuntu-Light.ttf");
-}
+};
 
 function setup() {
   angleMode(DEGREES);
   createCanvas(1600, 800, WEBGL);
 
-  
   addSliders();
-    orbitControlCheck = createCheckbox(
-      "Enable Orbit Control", true);
-    orbitControlCheck.position(900, 10);
-    orbitControlCheck.changed(orbitControlEvent);
-    orbitControlCheck.style('font-family', "Ubuntu-Light");
+  addChecks();
   
-    noFillCheck = createCheckbox(
-      "Wire Frame View", false);
-    noFillCheck.position(900, 30);
-    noFillCheck.changed(noFillEvent);
-    noFillCheck.style('font-family', "Ubuntu-Light");
-  
-  
-
 }
 
 function draw() {
@@ -818,8 +832,6 @@ function draw() {
 
   };
 
-
-
   background(200);
 
   lights();
@@ -828,9 +840,12 @@ function draw() {
     // text(key, points[key][0], points[key][1], 20, 20);
   }
   
-  Object.keys(drawFront).forEach(front => drawFront[front](points));
+  fill(0,0,0,63);
+  Object.keys(drawFront).forEach(shape => drawFront[shape](points));
+  if (showTreads.checked()){
+  Object.keys(drawTreads).forEach(shape => drawTreads[shape](points))};
   orbitControlEvent();
-
+  
 }
 
 function orbitControlEvent(){ 
