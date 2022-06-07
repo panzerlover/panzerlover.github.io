@@ -47,9 +47,9 @@ function addSliders(){
     "Bottom Plate",
     "Wing Top",
     "Wing Bottom",
-    "Step",
-    "Step Center",
     "Step Outer",
+    "Step Between",
+    "Step Center",
   ]
   .join("<br>"))
   .position(10, Heights.size().height + 30)
@@ -75,12 +75,12 @@ function addSliders(){
   wingTopWidth.parent(Widths);
   wingBottomWidth = createSlider(0, 250, 30, 5);
   wingBottomWidth.parent(Widths);
-  stepWidth = createSlider(0, 250, 30, 5);
-  stepWidth.parent(Widths);
-  stepCenterWidth = createSlider(0, 250, 20);
-  stepCenterWidth.parent(Widths);
-  stepOuterWingWidth = createSlider(0, 250, 30);
-  stepOuterWingWidth.parent(Widths);
+  stepOuterPanelWidth = createSlider(0, 250, 30, 5);
+  stepOuterPanelWidth.parent(Widths);
+  stepBetweenPanelWidth = createSlider(0, 250, 30);
+  stepBetweenPanelWidth.parent(Widths);
+  stepCentralPanelWidth = createSlider(0, 250, 20);
+  stepCentralPanelWidth.parent(Widths);
 
   DepthsNames = createDiv([
     "Bumper Top",
@@ -354,7 +354,7 @@ const drawFront = {
       beginShape();
       vertex(points.glacisWingRightShoulder[0], points.glacisWingRightShoulder[1], points.glacisWingRightShoulder[2]);
       vertex(points.glacisTopRight[0], points.glacisTopRight[1], points.glacisTopRight[2]);
-      vertex(points.stepBottomRight[0], points.stepBottomRight[1], points.stepBottomRight[2]);
+      vertex(points.stepFlankHelperRight[0], points.stepFlankHelperRight[1], points.stepFlankHelperRight[2]);
       vertex(points.glacisWingRightShoulder[0], points.glacisWingRightShoulder[1], points.glacisWingRightShoulder[2]);
       endShape();
       //side triangle bit
@@ -556,13 +556,43 @@ function setup() {
 }
 
 function draw() {
-  let bumperHasHeight = (bumperHeight.value() == 0) ? 0 : 1;
-  let stepHasHeight = (stepHeight.value()== 0) ? 0 : 1;
-  let stepNotHasHeight = (stepHeight.value()!= 0) ? 0 : 1;
-  let bumperOverZero = ((bumperTopDepth.value()*wingGlacisPercent.value()) > -bumperBottomDepth.value()) ? 0 : 1; 
-  let pikeAndSlope = (bumperPikeHeight.value() != 0 && bumperBottomDepth.value() < 0) ? 1 : 0;
-  let bumperVsBottomSlope = (bottomPlateDepth.value() - bumperBottomDepth.value() > bumperBottomDepth.value()) ? 1 : 0;
 
+  const pointHelpers = {
+    bumperHasHeight: bumperHeight.value() == 0 ? 0 : 1,
+    stepHasHeight: (stepHeight.value()== 0) ? 0 : 1,
+    stepNotHasHeight: (stepHeight.value()!= 0) ? 0 : 1,
+    bumperOverZero: ((bumperTopDepth.value()*wingGlacisPercent.value()) > -bumperBottomDepth.value()) ? 0 : 1,
+    pikeAndSlope: (bumperPikeHeight.value() != 0 && bumperBottomDepth.value() < 0) ? 1 : 0,
+    stepEdgeCalc: () => {
+      let GW = glacisTopWidth.value() + wingTopWidth.value();
+      if (stepCentralPanelWidth.value() >= GW) {
+        return 0;
+      } else if (stepCentralPanelWidth.value() + stepBetweenPanelWidth.value() >= GW) {
+
+        return stepInnerEdgeDepth.value() - 
+        (stepInnerEdgeDepth.value())*
+        ((stepCentralPanelWidth.value()+stepBetweenPanelWidth.value() - GW)/(stepBetweenPanelWidth.value()));
+
+      } else if (stepCentralPanelWidth.value() + stepBetweenPanelWidth.value()+ stepOuterPanelWidth.value() >= GW){
+
+        return stepInnerEdgeDepth.value() + stepOuterEdgeDepth.value() - 
+        (stepOuterEdgeDepth.value())*
+        ((stepCentralPanelWidth.value()+stepBetweenPanelWidth.value()+stepOuterPanelWidth.value()- GW)/(stepOuterPanelWidth.value()));
+
+      } else {
+        return stepInnerEdgeDepth.value() + stepOuterEdgeDepth.value();
+      }
+    //   let stepMiddleOverhang = (stepCentralPanelWidth.value() + stepBetweenPanelWidth.value() >= GW);
+    //   let stepWingOverhang = (stepCentralPanelWidth.value() + stepBetweenPanelWidth.value()+ stepOuterPanelWidth.value() >= GW);
+    //   let p1X = (stepMiddleOverhang) ? stepDepth.value() + stepInnerEdgeDepth.value() : stepDepth.value() + stepInnerEdgeDepth.value() + stepBetweenPanelWidth.value();
+    //   let p1Z = (stepMiddleOverhang) ? stepCentralPanelWidth.value() + stepBetweenPanelWidth.value() : stepCentralPanelWidth.value() + stepBetweenPanelWidth.value() + stepOuterPanelWidth.value();
+    //   let p2X = (stepMiddleOverhang) ? stepDepth.value() : stepDepth.value() + stepInnerEdgeDepth.value();
+    //   let p2Z = (stepMiddleOverhang) ? stepCentralPanelWidth.value() : stepCentralPanelWidth.value() + stepBetweenPanelWidth.value();
+    //   return (p1X - p2X) * ((p1Z - GW)/(p1Z - p2Z));
+    //  }
+    },
+
+  }
   const points = {
     glacisTopLeft: [
       tank.x,
@@ -635,12 +665,12 @@ function draw() {
       tank.z-(glacisTopWidth.value()  + waistWidth.value() + (((bumperWidth.value() - glacisTopWidth.value()) ) * wingGlacisPercent.value() + wingBottomWidth.value())*Math.ceil(wingGlacisPercent.value()) ),
     ],
     glacisBottomLeft: [
-      tank.x-(bumperTopDepth.value()+((bumperBottomDepth.value()*bumperPikeHeight.value())/(bumperPikeHeight.value()+bumperHeight.value()))*pikeAndSlope),
+      tank.x-(bumperTopDepth.value()+((bumperBottomDepth.value()*bumperPikeHeight.value())/(bumperPikeHeight.value()+bumperHeight.value()))*pointHelpers.pikeAndSlope),
       tank.y-(bottomPlateHeight.value()+bumperHeight.value()), 
       tank.z-bumperWidth.value() 
     ],
     glacisBottomRight: [
-      tank.x-(bumperTopDepth.value()+((bumperBottomDepth.value()*bumperPikeHeight.value())/(bumperPikeHeight.value()+bumperHeight.value()))*pikeAndSlope),
+      tank.x-(bumperTopDepth.value()+((bumperBottomDepth.value()*bumperPikeHeight.value())/(bumperPikeHeight.value()+bumperHeight.value()))*pointHelpers.pikeAndSlope),
       tank.y-(bottomPlateHeight.value()+bumperHeight.value()), 
       tank.z+bumperWidth.value() 
     ],
@@ -656,22 +686,22 @@ function draw() {
     ],
     
     bumperBottomRight:[
-      tank.x-(bumperTopDepth.value()+(bumperBottomDepth.value()*bumperHasHeight)),
+      tank.x-(bumperTopDepth.value()+(bumperBottomDepth.value()*pointHelpers.bumperHasHeight)),
       tank.y-bottomPlateHeight.value(), 
       tank.z+bumperWidth.value()
     ],
     bumperBottomLeft:[
-      tank.x-(bumperTopDepth.value()+(bumperBottomDepth.value()*bumperHasHeight)), 
+      tank.x-(bumperTopDepth.value()+(bumperBottomDepth.value()*pointHelpers.bumperHasHeight)), 
       tank.y-bottomPlateHeight.value(),
       tank.z-bumperWidth.value()
     ],
     bumperBottomRightFlank:[
-      tank.x-((bumperTopDepth.value() * wingGlacisPercent.value())+(((bumperTopDepth.value()*wingGlacisPercent.value())+bumperBottomDepth.value())*bumperOverZero)),
+      tank.x-((bumperTopDepth.value() * wingGlacisPercent.value())+(((bumperTopDepth.value()*wingGlacisPercent.value())+bumperBottomDepth.value())*pointHelpers.bumperOverZero)),
       tank.y-(bottomPlateHeight.value()),
       tank.z+(bumperWidth.value()+waistWidth.value()),
     ],
     bumperBottomLeftFlank:[
-      tank.x-((bumperTopDepth.value() * wingGlacisPercent.value())+(((bumperTopDepth.value()*wingGlacisPercent.value())+bumperBottomDepth.value())*bumperOverZero)),
+      tank.x-((bumperTopDepth.value() * wingGlacisPercent.value())+(((bumperTopDepth.value()*wingGlacisPercent.value())+bumperBottomDepth.value())*pointHelpers.bumperOverZero)),
       tank.y-(bottomPlateHeight.value()),
       tank.z-(bumperWidth.value()+waistWidth.value()),
     ],
@@ -740,98 +770,102 @@ function draw() {
     flankGlacisTopLeft:[
       tank.x+(overallDepth.value()+stepDepth.value()),
       tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepBottomHeight.value()),
-      tank.z-((stepWidth.value()+stepCenterWidth.value()+stepOuterWingWidth.value())),
+      tank.z-((stepOuterPanelWidth.value()+stepCentralPanelWidth.value()+stepBetweenPanelWidth.value())),
     ],
     flankGlacisTopRight:[
       tank.x+(overallDepth.value()+stepDepth.value()),
       tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value()) + stepBottomHeight.value()),
-      tank.z+((stepWidth.value()+stepCenterWidth.value()+stepOuterWingWidth.value())),
+      tank.z+((stepOuterPanelWidth.value()+stepCentralPanelWidth.value()+stepBetweenPanelWidth.value())),
     ],
 
     stepTopLeft:[
-      tank.x+((stepDepth.value()+stepOuterEdgeDepth.value()+stepInnerEdgeDepth.value()+stepTopDepth.value())*stepHasHeight)+(wingOuterEdgeDepth.value()*stepNotHasHeight),
+      tank.x+((stepDepth.value()+stepOuterEdgeDepth.value()+stepInnerEdgeDepth.value()+stepTopDepth.value())*pointHelpers.stepHasHeight)+(wingOuterEdgeDepth.value()*pointHelpers.stepNotHasHeight),
       tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepHeight.value()+stepBottomHeight.value()),
-      tank.z-(stepWidth.value()+stepCenterWidth.value()+stepOuterWingWidth.value()),
+      tank.z-(stepOuterPanelWidth.value()+stepCentralPanelWidth.value()+stepBetweenPanelWidth.value()),
     ],
     stepTopRight:[
-      tank.x+((stepDepth.value()+stepOuterEdgeDepth.value()+stepInnerEdgeDepth.value()+stepTopDepth.value())*stepHasHeight)+(wingOuterEdgeDepth.value()*stepNotHasHeight),
+      tank.x+((stepDepth.value()+stepOuterEdgeDepth.value()+stepInnerEdgeDepth.value()+stepTopDepth.value())*pointHelpers.stepHasHeight)+(wingOuterEdgeDepth.value()*pointHelpers.stepNotHasHeight),
       tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepHeight.value()+stepBottomHeight.value()),
-      tank.z+(stepWidth.value()+stepCenterWidth.value()+stepOuterWingWidth.value()),
+      tank.z+(stepOuterPanelWidth.value()+stepCentralPanelWidth.value()+stepBetweenPanelWidth.value()),
     ],
     stepTopRightFlank: [
       tank.x+(overallDepth.value()+stepDepth.value()),
       tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepHeight.value()+stepBottomHeight.value()),
-      tank.z+(stepWidth.value()+stepCenterWidth.value()+stepOuterWingWidth.value()),
+      tank.z+(stepOuterPanelWidth.value()+stepCentralPanelWidth.value()+stepBetweenPanelWidth.value()),
     ],
     stepTopLeftFlank:[
       tank.x+(overallDepth.value()+stepDepth.value()),
       tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepHeight.value()+stepBottomHeight.value()),
-      tank.z-(stepWidth.value()+stepCenterWidth.value()+stepOuterWingWidth.value()),
+      tank.z-(stepOuterPanelWidth.value()+stepCentralPanelWidth.value()+stepBetweenPanelWidth.value()),
     ],
 
     stepBottomLeft:[
-      tank.x+((stepDepth.value()+stepOuterEdgeDepth.value()+stepInnerEdgeDepth.value())*stepHasHeight)+(wingOuterEdgeDepth.value()*stepNotHasHeight),
+      tank.x+((stepDepth.value()+stepOuterEdgeDepth.value()+stepInnerEdgeDepth.value())*pointHelpers.stepHasHeight)+(wingOuterEdgeDepth.value()*pointHelpers.stepNotHasHeight),
       tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepBottomHeight.value()),
-      tank.z-(stepWidth.value()+stepCenterWidth.value()+stepOuterWingWidth.value()),
+      tank.z-(stepOuterPanelWidth.value()+stepCentralPanelWidth.value()+stepBetweenPanelWidth.value()),
     ],
     stepBottomRight:[
-      tank.x+((stepDepth.value()+stepOuterEdgeDepth.value()+stepInnerEdgeDepth.value())*stepHasHeight)+(wingOuterEdgeDepth.value()*stepNotHasHeight),
+      tank.x+((stepDepth.value()+stepOuterEdgeDepth.value()+stepInnerEdgeDepth.value())*pointHelpers.stepHasHeight)+(wingOuterEdgeDepth.value()*pointHelpers.stepNotHasHeight),
       tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepBottomHeight.value()),
-      tank.z+(stepWidth.value()+stepCenterWidth.value()+stepOuterWingWidth.value()),
+      tank.z+(stepOuterPanelWidth.value()+stepCentralPanelWidth.value()+stepBetweenPanelWidth.value()),
     ],
    
     
     stepOuterWingTopLeft:[
-      tank.x+(stepDepth.value()+stepInnerEdgeDepth.value()+stepTopDepth.value())*stepHasHeight,
+      tank.x+(stepDepth.value()+stepInnerEdgeDepth.value()+stepTopDepth.value())*pointHelpers.stepHasHeight,
       tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepHeight.value()+stepBottomHeight.value()),
-      tank.z-(stepOuterWingWidth.value()+stepCenterWidth.value()),
+      tank.z-(stepBetweenPanelWidth.value()+stepCentralPanelWidth.value()),
     ],
     stepOuterWingBottomLeft:[
-      tank.x+(stepDepth.value()+stepInnerEdgeDepth.value())*stepHasHeight,
+      tank.x+(stepDepth.value()+stepInnerEdgeDepth.value())*pointHelpers.stepHasHeight,
       tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepBottomHeight.value()),
-      tank.z-(stepOuterWingWidth.value()+stepCenterWidth.value()),
+      tank.z-(stepBetweenPanelWidth.value()+stepCentralPanelWidth.value()),
     ],
 
 
     stepOuterWingTopRight:[
-      tank.x+(stepDepth.value()+stepInnerEdgeDepth.value()+stepTopDepth.value())*stepHasHeight,
+      tank.x+(stepDepth.value()+stepInnerEdgeDepth.value()+stepTopDepth.value())*pointHelpers.stepHasHeight,
       tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepHeight.value()+stepBottomHeight.value()),
-      tank.z+(stepOuterWingWidth.value()+stepCenterWidth.value()),
+      tank.z+(stepBetweenPanelWidth.value()+stepCentralPanelWidth.value()),
     ],
     stepOuterWingBottomRight:[
-      tank.x+(stepDepth.value()+stepInnerEdgeDepth.value())*stepHasHeight,
+      tank.x+(stepDepth.value()+stepInnerEdgeDepth.value())*pointHelpers.stepHasHeight,
       tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepBottomHeight.value()),
-      tank.z+(stepOuterWingWidth.value()+stepCenterWidth.value()),
+      tank.z+(stepBetweenPanelWidth.value()+stepCentralPanelWidth.value()),
     ],
     
     stepInnerWingTopLeft:[
-      tank.x+(stepDepth.value()+stepTopDepth.value())*stepHasHeight,
+      tank.x+(stepDepth.value()+stepTopDepth.value())*pointHelpers.stepHasHeight,
       tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepHeight.value()+stepBottomHeight.value()),
-      tank.z-(stepCenterWidth.value()),
+      tank.z-(stepCentralPanelWidth.value()),
     ],
     stepInnerWingBottomLeft:[
-      tank.x+(stepDepth.value())*stepHasHeight,
+      tank.x+(stepDepth.value())*pointHelpers.stepHasHeight,
       tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepBottomHeight.value()),
-      tank.z-(stepCenterWidth.value()),
+      tank.z-(stepCentralPanelWidth.value()),
     ],
 
     stepInnerWingTopRight:[
-      tank.x+(stepDepth.value()+stepTopDepth.value())*stepHasHeight,
+      tank.x+(stepDepth.value()+stepTopDepth.value())*pointHelpers.stepHasHeight,
       tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepHeight.value()+stepBottomHeight.value()),
-      tank.z+(stepCenterWidth.value()),
+      tank.z+(stepCentralPanelWidth.value()),
     ],
     stepInnerWingBottomRight:[
-      tank.x+(stepDepth.value())*stepHasHeight,
+      tank.x+(stepDepth.value())*pointHelpers.stepHasHeight,
       tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepBottomHeight.value()),
-      tank.z+(stepCenterWidth.value()),
+      tank.z+(stepCentralPanelWidth.value()),
     ],
-    
-
-
-
-
+    stepFlankHelperRight:[
+      tank.x+(stepDepth.value()+pointHelpers.stepEdgeCalc()),
+      tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepBottomHeight.value()),
+      tank.z+(glacisTopWidth.value() + wingTopWidth.value()),
+    ],
+    stepFlankHelperLeft:[
+      tank.x+(stepDepth.value()+pointHelpers.stepEdgeCalc()),
+      tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepBottomHeight.value()),
+      tank.z-(glacisTopWidth.value() + wingTopWidth.value()),
+    ],
   };
-
   background(200);
 
   lights();
@@ -840,7 +874,7 @@ function draw() {
     // text(key, points[key][0], points[key][1], 20, 20);
   }
   
-  fill(0,0,0,63);
+  // fill(0,0,0,63);
   Object.keys(drawFront).forEach(shape => drawFront[shape](points));
   if (showTreads.checked()){
   Object.keys(drawTreads).forEach(shape => drawTreads[shape](points))};
