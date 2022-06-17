@@ -63,7 +63,7 @@ function addSliders(){
   Widths.style('font-family', "Ubuntu-Light")
   glacisTopWidth = createSlider(0, 250, 50, 5);
   glacisTopWidth.parent(Widths);
-  midGlacisWidth = createSlider(0,250,0);
+  midGlacisWidth = createSlider(0,250,25);
   midGlacisWidth.parent(Widths);
   waistWidth = createSlider(0, 250, 0, 5);
   waistWidth.parent(Widths);
@@ -142,401 +142,342 @@ function addChecks(){
   noFillCheck.style('font-family', "Ubuntu-Light");
 
   showTreads = createCheckbox(
-    "Show Treads", true);
+    "Show Treads", false);
   showTreads.position(900, 50);
   showTreads.style("font-family", "Ubuntu-Light");
 }
 const drawFront = {
-  Glacis : (points)=>{
-    //top glacis
-    //left top left
+  Glacis: (p)=>{
+    //mirrored
+    let mult = [1, -1];
+    mult.forEach((num)=> {
+      //front panels
+      beginShape(TRIANGLE_STRIP);
+      vertex(p.gTopCorn.x, p.gTopCorn.y, num*p.gTopCorn.z);
+      vertex(p.gTopMid.x, p.gTopMid.y, num*p.gTopMid.z);
+      vertex(p.gWaist.x, p.gWaist.y, num*p.gWaist.z);
+      vertex(p.gBotMid.x, p.gBotMid.y, num*p.gBotMid.z);
+      vertex(p.gBotCorn.x, p.gBotCorn.y, num*p.gBotCorn.z);
+      endShape();
+
+      //wings
+      beginShape(TRIANGLE_STRIP);
+      vertex(p.gTopCorn.x, p.gTopCorn.y, num*p.gTopCorn.z);
+      vertex(p.wTopCorn.x, p.wTopCorn.y, num*p.wTopCorn.z);
+      vertex(p.gWaist.x, p.gWaist.y, num*p.gWaist.z)
+      vertex(p.wBotCorn.x, p.wBotCorn.y, num*p.wBotCorn.z);
+      endShape()
+
+
+    })
+    //middle panel
     beginShape()
-      vertex(points.glacisTopMiddleLeft[0], points.glacisTopMiddleLeft[1], points.glacisTopMiddleLeft[2]);
-      vertex(points.glacisTopLeft[0], points.glacisTopLeft[1], points.glacisTopLeft[2]);
-      vertex(points.glacisWingLeftPit[0], points.glacisWingLeftPit[1], points.glacisWingLeftPit[2]);
-      vertex(points.glacisTopMiddleLeft[0], points.glacisTopMiddleLeft[1],points.glacisTopMiddleLeft[2]);
-    endShape();
-    //left middle
-    beginShape();
-      vertex(points.glacisTopMiddleLeft[0], points.glacisTopMiddleLeft[1], points.glacisTopMiddleLeft[2]);
-      vertex(points.glacisBottomMiddleLeft[0], points.glacisBottomMiddleLeft[1], points.glacisBottomMiddleLeft[2]);
-      vertex(points.glacisWingLeftPit[0], points.glacisWingLeftPit[1], points.glacisWingLeftPit[2]);
-      vertex(points.glacisTopMiddleLeft[0], points.glacisTopMiddleLeft[1], points.glacisTopMiddleLeft[2])
-    endShape();
-    //left bottom left
-    beginShape();
-      vertex(points.glacisBottomMiddleLeft[0], points.glacisBottomMiddleLeft[1], points.glacisBottomMiddleLeft[2]);
-      vertex(points.glacisWingLeftPit[0], points.glacisWingLeftPit[1], points.glacisWingLeftPit[2]);
-      vertex(points.glacisBottomLeft[0], points.glacisBottomLeft[1], points.glacisBottomLeft[2]);
-    endShape();
-    //right top
+    vertex(p.gTopMid.x, p.gTopMid.y, -p.gTopMid.z)
+    vertex(p.gTopMid.x, p.gTopMid.y, p.gTopMid.z)
+    vertex(p.gBotMid.x, p.gBotMid.y, p.gBotMid.z)
+    vertex(p.gBotMid.x, p.gBotMid.y, -p.gBotMid.z)
+    endShape(CLOSE)
+
+  },
+  Bumper: (p)=> {
     beginShape()
-      vertex(points.glacisTopMiddleRight[0], points.glacisTopMiddleRight[1], points.glacisTopMiddleRight[2]);
-      vertex(points.glacisTopRight[0], points.glacisTopRight[1], points.glacisTopRight[2]);
-      vertex(points.glacisWingRightPit[0], points.glacisWingRightPit[1], points.glacisWingRightPit[2]);
-      vertex(points.glacisTopMiddleRight[0], points.glacisTopMiddleRight[1],points.glacisTopMiddleRight[2]);
-    endShape();
-    //right middle
-    beginShape();
-      vertex(points.glacisTopMiddleRight[0], points.glacisTopMiddleRight[1], points.glacisTopMiddleRight[2]);
-      vertex(points.glacisBottomMiddleRight[0], points.glacisBottomMiddleRight[1], points.glacisBottomMiddleRight[2]);
-      vertex(points.glacisWingRightPit[0], points.glacisWingRightPit[1], points.glacisWingRightPit[2]);
-      vertex(points.glacisTopMiddleRight[0], points.glacisTopMiddleRight[1], points.glacisTopMiddleRight[2])
-    endShape();
-  //right bottom right
-    beginShape();
-      vertex(points.glacisBottomMiddleRight[0], points.glacisBottomMiddleRight[1], points.glacisBottomMiddleRight[2]);
-      vertex(points.glacisWingRightPit[0], points.glacisWingRightPit[1], points.glacisWingRightPit[2]);
-      vertex(points.glacisBottomRight[0], points.glacisBottomRight[1], points.glacisBottomRight[2]);
-    endShape();
-    //middle
-    beginShape();
-      vertex(points.glacisTopMiddleLeft[0], points.glacisTopMiddleLeft[1], points.glacisTopMiddleLeft[2]);
-      vertex(points.glacisBottomMiddleLeft[0], points.glacisBottomMiddleLeft[1], points.glacisBottomMiddleLeft[2]);
-      vertex(points.glacisBottomMiddleRight[0], points.glacisBottomMiddleRight[1], points.glacisBottomMiddleRight[2]);
-      vertex(points.glacisTopMiddleRight[0], points.glacisTopMiddleRight[1], points.glacisTopMiddleRight[2]);
-      vertex(points.glacisTopMiddleLeft[0], points.glacisTopMiddleLeft[1], points.glacisTopMiddleLeft[2]);
-    endShape();
-  },
-  Wings: (points) => { 
-    // left wing front
-    beginShape();
-      vertex(points.glacisTopLeft[0],             points.glacisTopLeft[1],            points.glacisTopLeft[2]);
-      vertex(points.glacisWingLeftShoulder[0],    points.glacisWingLeftShoulder[1],   points.glacisWingLeftShoulder[2]);
-      vertex(points.glacisWingLeftBottom[0],      points.glacisWingLeftBottom[1],     points.glacisWingLeftBottom[2]);
-      vertex(points.glacisTopLeft[0], points.glacisTopLeft[1], points.glacisTopLeft[2]);
-      vertex(points.glacisWingLeftPit[0],         points.glacisWingLeftPit[1],        points.glacisWingLeftPit[2]);
-      vertex(points.glacisWingLeftBottom[0], points.glacisWingLeftBottom[1], points.glacisWingLeftBottom[2]);
-      vertex(points.glacisTopLeft[0],             points.glacisTopLeft[1],            points.glacisTopLeft[2]);
-    endShape();
-    // left wing bottom
-    beginShape();
-      vertex(points.glacisWingLeftPitFlank[0], points.glacisWingLeftPitFlank[1], points.glacisWingLeftPitFlank[2]);
-      vertex(points.glacisWingLeftPit[0], points.glacisWingLeftPit[1], points.glacisWingLeftPit[2]);
-      vertex(points.glacisWingLeftBottom[0], points.glacisWingLeftBottom[1], points.glacisWingLeftBottom[2]);
-      vertex(points.glacisWingLeftBottomFlank[0], points.glacisWingLeftBottomFlank[1], points.glacisWingLeftBottomFlank[2]);
-    endShape();
-    // left wing side
-    beginShape();
-      vertex(points.glacisWingLeftShoulder[0], points.glacisWingLeftShoulder[1], points.glacisWingLeftShoulder[2]);
-      vertex(points.glacisWingLeftBottom[0], points.glacisWingLeftBottom[1], points.glacisWingLeftBottom[2]);
-      vertex(points.glacisWingLeftBottomFlank[0], points.glacisWingLeftBottomFlank[1], points.glacisWingLeftBottomFlank[2]);
-    endShape();
-  
-  
-    // right wing
-    beginShape();
-      vertex(points.glacisTopRight[0],            points.glacisTopRight[1],           points.glacisTopRight[2]);
-      vertex(points.glacisWingRightShoulder[0],   points.glacisWingRightShoulder[1],  points.glacisWingRightShoulder[2]);
-      vertex(points.glacisWingRightBottom[0],     points.glacisWingRightBottom[1],    points.glacisWingRightBottom[2]);
-      vertex(points.glacisTopRight[0], points.glacisTopRight[1], points.glacisTopRight[2]);
-      vertex(points.glacisWingRightPit[0],        points.glacisWingRightPit[1],       points.glacisWingRightPit[2]);
-      vertex(points.glacisWingRightBottom[0], points.glacisWingRightBottom[1], points.glacisWingRightBottom[2]);
-      vertex(points.glacisTopRight[0],            points.glacisTopRight[1],           points.glacisTopRight[2]);
-    endShape();
-    // right wing bottom
-    beginShape();
-      vertex(points.glacisWingRightPitFlank[0], points.glacisWingRightPitFlank[1], points.glacisWingRightPitFlank[2]);
-      vertex(points.glacisWingRightPit[0], points.glacisWingRightPit[1], points.glacisWingRightPit[2]);
-      vertex(points.glacisWingRightBottom[0], points.glacisWingRightBottom[1], points.glacisWingRightBottom[2]);
-      vertex(points.glacisWingRightBottomFlank[0], points.glacisWingRightBottomFlank[1], points.glacisWingRightBottomFlank[2]);
-    endShape();
-    // right wing side
-    beginShape();
-      vertex(points.glacisWingRightShoulder[0], points.glacisWingRightShoulder[1], points.glacisWingRightShoulder[2]);
-      vertex(points.glacisWingRightBottom[0], points.glacisWingRightBottom[1], points.glacisWingRightBottom[2]);
-      vertex(points.glacisWingRightBottomFlank[0], points.glacisWingRightBottomFlank[1], points.glacisWingRightBottomFlank[2]);
-    endShape();
-    
-  },
-  Bumper: (points)=>{
-    //bumper
-    //left
-      beginShape();
-        vertex(points.glacisBottomLeft[0], points.glacisBottomLeft[1], points.glacisBottomLeft[2]);
-        vertex(points.bumperBottomLeft[0], points.bumperBottomLeft[1], points.bumperBottomLeft[2]);
-        vertex(points.glacisBottomMiddleLeft[0], points.glacisBottomMiddleLeft[1], points.glacisBottomMiddleLeft[2]);
-        vertex(points.glacisBottomLeft[0], points.glacisBottomLeft[1], points.glacisBottomLeft[2]);
-      endShape();
-    //right
-      beginShape();
-        vertex(points.glacisBottomRight[0], points.glacisBottomRight[1], points.glacisBottomRight[2]);
-        vertex(points.bumperBottomRight[0], points.bumperBottomRight[1], points.bumperBottomRight[2]);
-        vertex(points.glacisBottomMiddleRight[0], points.glacisBottomMiddleRight[1], points.glacisBottomMiddleRight[2]);
-        vertex(points.glacisBottomRight[0], points.glacisBottomRight[1], points.glacisBottomRight[2]);
-      endShape();
-    //bottom
-      beginShape();
-        vertex(points.glacisBottomMiddleLeft[0], points.glacisBottomMiddleLeft[1], points.glacisBottomMiddleLeft[2]);
-        vertex(points.bumperBottomLeft[0], points.bumperBottomLeft[1], points.bumperBottomLeft[2]);
-        vertex(points.bumperBottomRight[0], points.bumperBottomRight[1], points.bumperBottomRight[2]);
-        vertex(points.glacisBottomMiddleRight[0], points.glacisBottomMiddleRight[1], points.glacisBottomMiddleRight[2]);
-      endShape();
-  },
-  BottomPlate: (points) => {
+    vertex(p.gBotMid.x, p.gBotMid.y, p.gBotMid.z)
+    vertex(p.gBotCorn.x, p.gBotCorn.y, p.gBotCorn.z)
+    vertex(p.bBotCorn.x, p.bBotCorn.y, p.bBotCorn.z)
+    vertex(p.bBotCorn.x, p.bBotCorn.y, -p.bBotCorn.z)
+    vertex(p.gBotCorn.x, p.gBotCorn.y, -p.gBotCorn.z)
+    vertex(p.gBotMid.x, p.gBotMid.y, -p.gBotMid.z)
+    endShape()
 
-    beginShape();
-    vertex(points.bumperBottomLeft[0], points.bumperBottomLeft[1], points.bumperBottomLeft[2]); 
-    vertex(points.bottomPlateLeft[0], points.bottomPlateLeft[1], points.bottomPlateLeft[2]);
-    vertex(points.bottomPlateRight[0], points.bottomPlateRight[1], points.bottomPlateRight[2]);
-    vertex(points.bumperBottomRight[0], points.bumperBottomRight[1], points.bumperBottomRight[2]);
-    vertex(points.bumperBottomLeft[0], points.bumperBottomLeft[1], points.bumperBottomLeft[2]);
-    endShape();
-  
   },
-  GlacisSides: (points)=>{
+//   // Bumper: (p)=>{
+//   //   //bumper
+//   //   //left
+//   //     beginShape();
+//   //       vertex(p.glacisBottomLeft.x, p.glacisBottomLeft.y, p.glacisBottomLeft.z);
+//   //       vertex(p.bumperBottomLeft.x, p.bumperBottomLeft.y, p.bumperBottomLeft.z);
+//   //       vertex(p.glacisBottomMiddleLeft.x, p.glacisBottomMiddleLeft.y, p.glacisBottomMiddleLeft.z);
+//   //       vertex(p.glacisBottomLeft.x, p.glacisBottomLeft.y, p.glacisBottomLeft.z);
+//   //     endShape();
+//   //   //right
+//   //     beginShape();
+//   //       vertex(p.glacisBottomRight.x, p.glacisBottomRight.y, p.glacisBottomRight.z);
+//   //       vertex(p.bumperBottomRight.x, p.bumperBottomRight.y, p.bumperBottomRight.z);
+//   //       vertex(p.glacisBottomMiddleRight.x, p.glacisBottomMiddleRight.y, p.glacisBottomMiddleRight.z);
+//   //       vertex(p.glacisBottomRight.x, p.glacisBottomRight.y, p.glacisBottomRight.z);
+//   //     endShape();
+//   //   //bottom
+//   //     beginShape();
+//   //       vertex(p.glacisBottomMiddleLeft.x, p.glacisBottomMiddleLeft.y, p.glacisBottomMiddleLeft.z);
+//   //       vertex(p.bumperBottomLeft.x, p.bumperBottomLeft.y, p.bumperBottomLeft.z);
+//   //       vertex(p.bumperBottomRight.x, p.bumperBottomRight.y, p.bumperBottomRight.z);
+//   //       vertex(p.glacisBottomMiddleRight.x, p.glacisBottomMiddleRight.y, p.glacisBottomMiddleRight.z);
+//   //     endShape();
+//   // },
+//   BottomPlate: (p) => {
 
-    //right
-    //mid
-    beginShape();
-    vertex(points.glacisBottomRight[0], points.glacisBottomRight[1], points.glacisBottomRight[2]);
-    vertex(points.glacisWingRightPit[0], points.glacisWingRightPit[1], points.glacisWingRightPit[2])
-    vertex(points.bumperBottomRightFlank[0], points.bumperBottomRightFlank[1], points.bumperBottomRightFlank[2]);
-    vertex(points.bumperBottomRight[0], points.bumperBottomRight[1], points.bumperBottomRight[2]);
-    endShape();
-    //bottom
-    beginShape();
-    vertex(points.bumperBottomRight[0], points.bumperBottomRight[1], points.bumperBottomRight[2]);
-    vertex(points.bottomPlateRight[0], points.bottomPlateRight[1], points.bottomPlateRight[2]);
-    vertex(points.bumperBottomRightFlank[0], points.bumperBottomRightFlank[1], points.bumperBottomRightFlank[2]);
-    vertex(points.bumperBottomRight[0], points.bumperBottomRight[1], points.bumperBottomRight[2]);
-    endShape();
+//     beginShape();
+//     vertex(p.bumperBottomLeft.x, p.bumperBottomLeft.y, p.bumperBottomLeft.z); 
+//     vertex(p.bottomPlateLeft.x, p.bottomPlateLeft.y, p.bottomPlateLeft.z);
+//     vertex(p.bottomPlateRight.x, p.bottomPlateRight.y, p.bottomPlateRight.z);
+//     vertex(p.bumperBottomRight.x, p.bumperBottomRight.y, p.bumperBottomRight.z);
+//     vertex(p.bumperBottomLeft.x, p.bumperBottomLeft.y, p.bumperBottomLeft.z);
+//     endShape();
   
-    //left
-    beginShape();
-    vertex(points.glacisBottomLeft[0], points.glacisBottomLeft[1], points.glacisBottomLeft[2]);
-    vertex(points.glacisWingLeftPit[0], points.glacisWingLeftPit[1], points.glacisWingLeftPit[2])
-    vertex(points.bumperBottomLeftFlank[0], points.bumperBottomLeftFlank[1], points.bumperBottomLeftFlank[2]);
-    vertex(points.bumperBottomLeft[0], points.bumperBottomLeft[1], points.bumperBottomLeft[2]);
-    endShape();
-    beginShape();
-    vertex(points.bumperBottomLeft[0], points.bumperBottomLeft[1], points.bumperBottomLeft[2]);
-    vertex(points.bottomPlateLeft[0], points.bottomPlateLeft[1], points.bottomPlateLeft[2]);
-    vertex(points.bumperBottomLeftFlank[0], points.bumperBottomLeftFlank[1], points.bumperBottomLeftFlank[2]);
-    vertex(points.bumperBottomLeft[0], points.bumperBottomLeft[1], points.bumperBottomLeft[2]);
-    endShape();
-  },
-  Flanks: (points)=>{
+//   },
+//   GlacisSides: (p)=>{
 
-    //right flank
-    //bottom
-    beginShape();
-    vertex(points.bottomPlateRight[0], points.bottomPlateRight[1], points.bottomPlateRight[2]);
-    vertex(points.flankBottomPlateRight[0], points.flankBottomPlateRight[1], points.flankBottomPlateRight[2]);
-    vertex(points.flankBumperBottomRightFlank[0], points.flankBumperBottomRightFlank[1], points.flankBumperBottomRightFlank[2]);
-    vertex(points.bumperBottomRightFlank[0], points.bumperBottomRightFlank[1], points.bumperBottomRightFlank[2]);
-    vertex(points.bottomPlateRight[0], points.bottomPlateRight[1], points.bottomPlateRight[2]);
-    endShape();
-    //middle vert
-    beginShape();
-    vertex(points.bumperBottomRightFlank[0], points.bumperBottomRightFlank[1], points.bumperBottomRightFlank[2]);
-    vertex(points.flankBumperBottomRightFlank[0], points.flankBumperBottomRightFlank[1], points.flankBumperBottomRightFlank[2]);
-    vertex(points.flankGlacisWingRightPitFlank[0], points.flankGlacisWingRightPitFlank[1], points.flankGlacisWingRightPitFlank[2]);
-    vertex(points.glacisWingRightPit[0], points.glacisWingRightPit[1], points.glacisWingRightPit[2]);
-    vertex(points.bumperBottomRightFlank[0], points.bumperBottomRightFlank[1], points.bumperBottomRightFlank[2]);
-    endShape();
-    //wing bottom
-    beginShape();
-      vertex(points.glacisWingRightPitFlank[0], points.glacisWingRightPitFlank[1], points.glacisWingRightPitFlank[2]);
-      vertex(points.flankGlacisWingRightPitFlank[0], points.flankGlacisWingRightPitFlank[1], points.flankGlacisWingRightPitFlank[2]);
-      vertex(points.flankGlacisWingRightBottomFlank[0], points.flankGlacisWingRightBottomFlank[1], points.flankGlacisWingRightBottomFlank[2]);
-      vertex(points.glacisWingRightBottomFlank[0], points.glacisWingRightBottomFlank[1], points.glacisWingRightBottomFlank[2]);
-    endShape();
-    //wing side
-    beginShape();
-      vertex(points.glacisWingRightBottomFlank[0], points.glacisWingRightBottomFlank[1], points.glacisWingRightBottomFlank[2]);
-      vertex(points.flankGlacisWingRightBottomFlank[0], points.flankGlacisWingRightBottomFlank[1], points.flankGlacisWingRightBottomFlank[2]);
-      vertex(points.flankGlacisWingRightShoulder[0], points.flankGlacisWingRightShoulder[1], points.flankGlacisWingRightShoulder[2]);
-      vertex(points.glacisWingRightShoulder[0], points.glacisWingRightShoulder[1], points.glacisWingRightShoulder[2]);
-    endShape();
-    // //wing top
-      //front bit
-      beginShape();
-      vertex(points.glacisWingRightShoulder[0], points.glacisWingRightShoulder[1], points.glacisWingRightShoulder[2]);
-      vertex(points.glacisTopRight[0], points.glacisTopRight[1], points.glacisTopRight[2]);
-      vertex(points.stepFlankHelperRight[0], points.stepFlankHelperRight[1], points.stepFlankHelperRight[2]);
-      vertex(points.glacisWingRightShoulder[0], points.glacisWingRightShoulder[1], points.glacisWingRightShoulder[2]);
-      endShape();
-      //side triangle bit
-      beginShape();
-        vertex(points.glacisWingRightShoulder[0], points.glacisWingRightShoulder[1], points.glacisWingRightShoulder[2]);
-        vertex(points.flankGlacisWingRightShoulder[0], points.flankGlacisWingRightShoulder[1], points.flankGlacisWingRightShoulder[2]);
-        vertex(points.stepBottomRight[0], points.stepBottomRight[1], points.stepBottomRight[2]);
-      endShape();
-      //back bit
-      beginShape();
-        vertex(points.stepBottomRight[0], points.stepBottomRight[1], points.stepBottomRight[2]);
-        vertex(points.flankGlacisTopRight[0], points.flankGlacisTopRight[1], points.flankGlacisTopRight[2]);
-        vertex(points.flankGlacisWingRightShoulder[0], points.flankGlacisWingRightShoulder[1], points.flankGlacisWingRightShoulder[2]);
-      endShape();
+//     //right
+//     //mid
+//     beginShape();
+//     vertex(p.glacisBottomRight.x, p.glacisBottomRight.y, p.glacisBottomRight.z);
+//     vertex(p.glacisWingRightPit.x, p.glacisWingRightPit.y, p.glacisWingRightPit.z)
+//     vertex(p.bumperBottomRightFlank.x, p.bumperBottomRightFlank.y, p.bumperBottomRightFlank.z);
+//     vertex(p.bumperBottomRight.x, p.bumperBottomRight.y, p.bumperBottomRight.z);
+//     endShape();
+//     //bottom
+//     beginShape();
+//     vertex(p.bumperBottomRight.x, p.bumperBottomRight.y, p.bumperBottomRight.z);
+//     vertex(p.bottomPlateRight.x, p.bottomPlateRight.y, p.bottomPlateRight.z);
+//     vertex(p.bumperBottomRightFlank.x, p.bumperBottomRightFlank.y, p.bumperBottomRightFlank.z);
+//     vertex(p.bumperBottomRight.x, p.bumperBottomRight.y, p.bumperBottomRight.z);
+//     endShape();
+  
+//     //left
+//     beginShape();
+//     vertex(p.glacisBottomLeft.x, p.glacisBottomLeft.y, p.glacisBottomLeft.z);
+//     vertex(p.glacisWingLeftPit.x, p.glacisWingLeftPit.y, p.glacisWingLeftPit.z)
+//     vertex(p.bumperBottomLeftFlank.x, p.bumperBottomLeftFlank.y, p.bumperBottomLeftFlank.z);
+//     vertex(p.bumperBottomLeft.x, p.bumperBottomLeft.y, p.bumperBottomLeft.z);
+//     endShape();
+//     beginShape();
+//     vertex(p.bumperBottomLeft.x, p.bumperBottomLeft.y, p.bumperBottomLeft.z);
+//     vertex(p.bottomPlateLeft.x, p.bottomPlateLeft.y, p.bottomPlateLeft.z);
+//     vertex(p.bumperBottomLeftFlank.x, p.bumperBottomLeftFlank.y, p.bumperBottomLeftFlank.z);
+//     vertex(p.bumperBottomLeft.x, p.bumperBottomLeft.y, p.bumperBottomLeft.z);
+//     endShape();
+//   },
+//   Flanks: (p)=>{
+
+//     //right flank
+//     //bottom
+//     beginShape();
+//     vertex(p.bottomPlateRight.x, p.bottomPlateRight.y, p.bottomPlateRight.z);
+//     vertex(p.flankBottomPlateRight.x, p.flankBottomPlateRight.y, p.flankBottomPlateRight.z);
+//     vertex(p.flankBumperBottomRightFlank.x, p.flankBumperBottomRightFlank.y, p.flankBumperBottomRightFlank.z);
+//     vertex(p.bumperBottomRightFlank.x, p.bumperBottomRightFlank.y, p.bumperBottomRightFlank.z);
+//     vertex(p.bottomPlateRight.x, p.bottomPlateRight.y, p.bottomPlateRight.z);
+//     endShape();
+//     //middle vert
+//     beginShape();
+//     vertex(p.bumperBottomRightFlank.x, p.bumperBottomRightFlank.y, p.bumperBottomRightFlank.z);
+//     vertex(p.flankBumperBottomRightFlank.x, p.flankBumperBottomRightFlank.y, p.flankBumperBottomRightFlank.z);
+//     vertex(p.flankGlacisWingRightPitFlank.x, p.flankGlacisWingRightPitFlank.y, p.flankGlacisWingRightPitFlank.z);
+//     vertex(p.glacisWingRightPit.x, p.glacisWingRightPit.y, p.glacisWingRightPit.z);
+//     vertex(p.bumperBottomRightFlank.x, p.bumperBottomRightFlank.y, p.bumperBottomRightFlank.z);
+//     endShape();
+//     //wing bottom
+//     beginShape();
+//       vertex(p.glacisWingRightPitFlank.x, p.glacisWingRightPitFlank.y, p.glacisWingRightPitFlank.z);
+//       vertex(p.flankGlacisWingRightPitFlank.x, p.flankGlacisWingRightPitFlank.y, p.flankGlacisWingRightPitFlank.z);
+//       vertex(p.flankGlacisWingRightBottomFlank.x, p.flankGlacisWingRightBottomFlank.y, p.flankGlacisWingRightBottomFlank.z);
+//       vertex(p.glacisWingRightBottomFlank.x, p.glacisWingRightBottomFlank.y, p.glacisWingRightBottomFlank.z);
+//     endShape();
+//     //wing side
+//     beginShape();
+//       vertex(p.glacisWingRightBottomFlank.x, p.glacisWingRightBottomFlank.y, p.glacisWingRightBottomFlank.z);
+//       vertex(p.flankGlacisWingRightBottomFlank.x, p.flankGlacisWingRightBottomFlank.y, p.flankGlacisWingRightBottomFlank.z);
+//       vertex(p.flankGlacisWingRightShoulder.x, p.flankGlacisWingRightShoulder.y, p.flankGlacisWingRightShoulder.z);
+//       vertex(p.glacisWingRightShoulder.x, p.glacisWingRightShoulder.y, p.glacisWingRightShoulder.z);
+//     endShape();
+//     // //wing top
+//       //front bit
+//       beginShape();
+//       vertex(p.glacisWingRightShoulder.x, p.glacisWingRightShoulder.y, p.glacisWingRightShoulder.z);
+//       vertex(p.glacisTopRight.x, p.glacisTopRight.y, p.glacisTopRight.z);
+//       vertex(p.stepFlankHelperRight.x, p.stepFlankHelperRight.y, p.stepFlankHelperRight.z);
+//       vertex(p.glacisWingRightShoulder.x, p.glacisWingRightShoulder.y, p.glacisWingRightShoulder.z);
+//       endShape();
+//       //side triangle bit
+//       beginShape();
+//         vertex(p.glacisWingRightShoulder.x, p.glacisWingRightShoulder.y, p.glacisWingRightShoulder.z);
+//         vertex(p.flankGlacisWingRightShoulder.x, p.flankGlacisWingRightShoulder.y, p.flankGlacisWingRightShoulder.z);
+//         vertex(p.stepBottomRight.x, p.stepBottomRight.y, p.stepBottomRight.z);
+//       endShape();
+//       //back bit
+//       beginShape();
+//         vertex(p.stepBottomRight.x, p.stepBottomRight.y, p.stepBottomRight.z);
+//         vertex(p.flankGlacisTopRight.x, p.flankGlacisTopRight.y, p.flankGlacisTopRight.z);
+//         vertex(p.flankGlacisWingRightShoulder.x, p.flankGlacisWingRightShoulder.y, p.flankGlacisWingRightShoulder.z);
+//       endShape();
    
   
-    //Left
-    //bottom
-    beginShape();
-    vertex(points.bottomPlateLeft[0], points.bottomPlateLeft[1], points.bottomPlateLeft[2]);
-    vertex(points.flankBottomPlateLeft[0], points.flankBottomPlateLeft[1], points.flankBottomPlateLeft[2]);
-    vertex(points.flankBumperBottomLeftFlank[0], points.flankBumperBottomLeftFlank[1], points.flankBumperBottomLeftFlank[2]);
-    vertex(points.bumperBottomLeftFlank[0], points.bumperBottomLeftFlank[1], points.bumperBottomLeftFlank[2]);
-    vertex(points.bottomPlateLeft[0], points.bottomPlateLeft[1], points.bottomPlateLeft[2]);
-    endShape();
-    //middle vert
-    beginShape();
-    vertex(points.bumperBottomLeftFlank[0], points.bumperBottomLeftFlank[1], points.bumperBottomLeftFlank[2]);
-    vertex(points.flankBumperBottomLeftFlank[0], points.flankBumperBottomLeftFlank[1], points.flankBumperBottomLeftFlank[2]);
-    vertex(points.flankGlacisWingLeftPitFlank[0], points.flankGlacisWingLeftPitFlank[1], points.flankGlacisWingLeftPitFlank[2]);
-    vertex(points.glacisWingLeftPit[0], points.glacisWingLeftPit[1], points.glacisWingLeftPit[2]);
-    vertex(points.bumperBottomLeftFlank[0], points.bumperBottomLeftFlank[1], points.bumperBottomLeftFlank[2]);
-    endShape();
-    //wing bottom
-    beginShape();
-      vertex(points.glacisWingLeftPitFlank[0], points.glacisWingLeftPitFlank[1], points.glacisWingLeftPitFlank[2]);
-      vertex(points.flankGlacisWingLeftPitFlank[0], points.flankGlacisWingLeftPitFlank[1], points.flankGlacisWingLeftPitFlank[2]);
-      vertex(points.flankGlacisWingLeftBottomFlank[0], points.flankGlacisWingLeftBottomFlank[1], points.flankGlacisWingLeftBottomFlank[2]);
-      vertex(points.glacisWingLeftBottomFlank[0], points.glacisWingLeftBottomFlank[1], points.glacisWingLeftBottomFlank[2]);
-    endShape();
-    //wing side
-    beginShape();
-      vertex(points.glacisWingLeftBottomFlank[0], points.glacisWingLeftBottomFlank[1], points.glacisWingLeftBottomFlank[2]);
-      vertex(points.flankGlacisWingLeftBottomFlank[0], points.flankGlacisWingLeftBottomFlank[1], points.flankGlacisWingLeftBottomFlank[2]);
-      vertex(points.flankGlacisWingLeftShoulder[0], points.flankGlacisWingLeftShoulder[1], points.flankGlacisWingLeftShoulder[2]);
-      vertex(points.glacisWingLeftShoulder[0], points.glacisWingLeftShoulder[1], points.glacisWingLeftShoulder[2]);
-    endShape();
-    // //wing top
-      //front bit
-      beginShape();
-        vertex(points.glacisWingLeftShoulder[0], points.glacisWingLeftShoulder[1], points.glacisWingLeftShoulder[2]);
-        vertex(points.glacisTopLeft[0], points.glacisTopLeft[1], points.glacisTopLeft[2]);
-        vertex(points.stepBottomLeft[0], points.stepBottomLeft[1], points.stepBottomLeft[2]);
-        vertex(points.glacisWingLeftShoulder[0], points.glacisWingLeftShoulder[1], points.glacisWingLeftShoulder[2]);
-      endShape();
-      //side triangle bit
-      beginShape();
-      vertex(points.glacisWingLeftShoulder[0], points.glacisWingLeftShoulder[1], points.glacisWingLeftShoulder[2]);
-      vertex(points.flankGlacisWingLeftShoulder[0], points.flankGlacisWingLeftShoulder[1], points.flankGlacisWingLeftShoulder[2]);
-      vertex(points.stepBottomLeft[0], points.stepBottomLeft[1], points.stepBottomLeft[2]);
-      endShape();
-      //back bit
-      beginShape(); 
-        vertex(points.stepBottomLeft[0], points.stepBottomLeft[1], points.stepBottomLeft[2]);
-        vertex(points.flankGlacisTopLeft[0], points.flankGlacisTopLeft[1], points.flankGlacisTopLeft[2]);
-        vertex(points.flankGlacisWingLeftShoulder[0], points.flankGlacisWingLeftShoulder[1], points.flankGlacisWingLeftShoulder[2]);
-      endShape();
+//     //Left
+//     //bottom
+//     beginShape();
+//     vertex(p.bottomPlateLeft.x, p.bottomPlateLeft.y, p.bottomPlateLeft.z);
+//     vertex(p.flankBottomPlateLeft.x, p.flankBottomPlateLeft.y, p.flankBottomPlateLeft.z);
+//     vertex(p.flankBumperBottomLeftFlank.x, p.flankBumperBottomLeftFlank.y, p.flankBumperBottomLeftFlank.z);
+//     vertex(p.bumperBottomLeftFlank.x, p.bumperBottomLeftFlank.y, p.bumperBottomLeftFlank.z);
+//     vertex(p.bottomPlateLeft.x, p.bottomPlateLeft.y, p.bottomPlateLeft.z);
+//     endShape();
+//     //middle vert
+//     beginShape();
+//     vertex(p.bumperBottomLeftFlank.x, p.bumperBottomLeftFlank.y, p.bumperBottomLeftFlank.z);
+//     vertex(p.flankBumperBottomLeftFlank.x, p.flankBumperBottomLeftFlank.y, p.flankBumperBottomLeftFlank.z);
+//     vertex(p.flankGlacisWingLeftPitFlank.x, p.flankGlacisWingLeftPitFlank.y, p.flankGlacisWingLeftPitFlank.z);
+//     vertex(p.glacisWingLeftPit.x, p.glacisWingLeftPit.y, p.glacisWingLeftPit.z);
+//     vertex(p.bumperBottomLeftFlank.x, p.bumperBottomLeftFlank.y, p.bumperBottomLeftFlank.z);
+//     endShape();
+//     //wing bottom
+//     beginShape();
+//       vertex(p.glacisWingLeftPitFlank.x, p.glacisWingLeftPitFlank.y, p.glacisWingLeftPitFlank.z);
+//       vertex(p.flankGlacisWingLeftPitFlank.x, p.flankGlacisWingLeftPitFlank.y, p.flankGlacisWingLeftPitFlank.z);
+//       vertex(p.flankGlacisWingLeftBottomFlank.x, p.flankGlacisWingLeftBottomFlank.y, p.flankGlacisWingLeftBottomFlank.z);
+//       vertex(p.glacisWingLeftBottomFlank.x, p.glacisWingLeftBottomFlank.y, p.glacisWingLeftBottomFlank.z);
+//     endShape();
+//     //wing side
+//     beginShape();
+//       vertex(p.glacisWingLeftBottomFlank.x, p.glacisWingLeftBottomFlank.y, p.glacisWingLeftBottomFlank.z);
+//       vertex(p.flankGlacisWingLeftBottomFlank.x, p.flankGlacisWingLeftBottomFlank.y, p.flankGlacisWingLeftBottomFlank.z);
+//       vertex(p.flankGlacisWingLeftShoulder.x, p.flankGlacisWingLeftShoulder.y, p.flankGlacisWingLeftShoulder.z);
+//       vertex(p.glacisWingLeftShoulder.x, p.glacisWingLeftShoulder.y, p.glacisWingLeftShoulder.z);
+//     endShape();
+//     // //wing top
+//       //front bit
+//       beginShape();
+//         vertex(p.glacisWingLeftShoulder.x, p.glacisWingLeftShoulder.y, p.glacisWingLeftShoulder.z);
+//         vertex(p.glacisTopLeft.x, p.glacisTopLeft.y, p.glacisTopLeft.z);
+//         vertex(p.stepBottomLeft.x, p.stepBottomLeft.y, p.stepBottomLeft.z);
+//         vertex(p.glacisWingLeftShoulder.x, p.glacisWingLeftShoulder.y, p.glacisWingLeftShoulder.z);
+//       endShape();
+//       //side triangle bit
+//       beginShape();
+//       vertex(p.glacisWingLeftShoulder.x, p.glacisWingLeftShoulder.y, p.glacisWingLeftShoulder.z);
+//       vertex(p.flankGlacisWingLeftShoulder.x, p.flankGlacisWingLeftShoulder.y, p.flankGlacisWingLeftShoulder.z);
+//       vertex(p.stepBottomLeft.x, p.stepBottomLeft.y, p.stepBottomLeft.z);
+//       endShape();
+//       //back bit
+//       beginShape(); 
+//         vertex(p.stepBottomLeft.x, p.stepBottomLeft.y, p.stepBottomLeft.z);
+//         vertex(p.flankGlacisTopLeft.x, p.flankGlacisTopLeft.y, p.flankGlacisTopLeft.z);
+//         vertex(p.flankGlacisWingLeftShoulder.x, p.flankGlacisWingLeftShoulder.y, p.flankGlacisWingLeftShoulder.z);
+//       endShape();
   
   
-  },
-  Step: (points) => {
-  //front panel
-  //left outer wing
-  beginShape();
-    vertex(points.stepBottomLeft[0], points.stepBottomLeft[1], points.stepBottomLeft[2]);
-    vertex(points.stepTopLeft[0], points.stepTopLeft[1], points.stepTopLeft[2]);
-    vertex(points.stepOuterWingTopLeft[0], points.stepOuterWingTopLeft[1], points.stepOuterWingTopLeft[2]);
-    vertex(points.stepOuterWingBottomLeft[0], points.stepOuterWingBottomLeft[1], points.stepOuterWingBottomLeft[2]);
-    vertex(points.stepBottomLeft[0], points.stepBottomLeft[1], points.stepBottomLeft[2]);
-  endShape();
-  // right outer wing
-  beginShape();
-    vertex(points.stepBottomRight[0], points.stepBottomRight[1], points.stepBottomRight[2]);
-    vertex(points.stepTopRight[0], points.stepTopRight[1], points.stepTopRight[2]);
-    vertex(points.stepOuterWingTopRight[0], points.stepOuterWingTopRight[1], points.stepOuterWingTopRight[2]);
-    vertex(points.stepOuterWingBottomRight[0], points.stepOuterWingBottomRight[1], points.stepOuterWingBottomRight[2]);
-    vertex(points.stepBottomRight[0], points.stepBottomRight[1], points.stepBottomRight[2]);
-  endShape();
-  //left inner wing
-    beginShape();
-      vertex(points.stepOuterWingBottomLeft[0], points.stepOuterWingBottomLeft[1], points.stepOuterWingBottomLeft[2]);
-      vertex(points.stepOuterWingTopLeft[0], points.stepOuterWingTopLeft[1], points.stepOuterWingTopLeft[2]);
-      vertex(points.stepInnerWingTopLeft[0], points.stepInnerWingTopLeft[1], points.stepInnerWingTopLeft[2]);
-      vertex(points.stepInnerWingBottomLeft[0], points.stepInnerWingBottomLeft[1], points.stepInnerWingBottomLeft[2]);
-      vertex(points.stepOuterWingBottomLeft[0], points.stepOuterWingBottomLeft[1], points.stepOuterWingBottomLeft[2]);
-    endShape();
-  // right inner wing
-    beginShape();
-      vertex(points.stepOuterWingBottomRight[0], points.stepOuterWingBottomRight[1], points.stepOuterWingBottomRight[2]);
-      vertex(points.stepOuterWingTopRight[0], points.stepOuterWingTopRight[1], points.stepOuterWingTopRight[2]);
-      vertex(points.stepInnerWingTopRight[0], points.stepInnerWingTopRight[1], points.stepInnerWingTopRight[2]);
-      vertex(points.stepInnerWingBottomRight[0], points.stepInnerWingBottomRight[1], points.stepInnerWingBottomRight[2]);
-      vertex(points.stepOuterWingBottomRight[0], points.stepOuterWingBottomRight[1], points.stepOuterWingBottomRight[2]);
-    endShape();
-  //step middle front
-    beginShape();
-      vertex(points.stepInnerWingTopLeft[0], points.stepInnerWingTopLeft[1], points.stepInnerWingTopLeft[2]);
-      vertex(points.stepInnerWingBottomLeft[0], points.stepInnerWingBottomLeft[1], points.stepInnerWingBottomLeft[2]);
-      vertex(points.stepInnerWingBottomRight[0], points.stepInnerWingBottomRight[1], points.stepInnerWingBottomRight[2]);
-      vertex(points.stepInnerWingTopRight[0], points.stepInnerWingTopRight[1], points.stepInnerWingTopRight[2]);
-      vertex(points.stepInnerWingTopLeft[0], points.stepInnerWingTopLeft[1], points.stepInnerWingTopLeft[2]);
-    endShape();
+//   },
+//   Step: (p) => {
+//   //front panel
+//   //left outer wing
+//   beginShape();
+//     vertex(p.stepBottomLeft.x, p.stepBottomLeft.y, p.stepBottomLeft.z);
+//     vertex(p.stepTopLeft.x, p.stepTopLeft.y, p.stepTopLeft.z);
+//     vertex(p.stepOuterWingTopLeft.x, p.stepOuterWingTopLeft.y, p.stepOuterWingTopLeft.z);
+//     vertex(p.stepOuterWingBottomLeft.x, p.stepOuterWingBottomLeft.y, p.stepOuterWingBottomLeft.z);
+//     vertex(p.stepBottomLeft.x, p.stepBottomLeft.y, p.stepBottomLeft.z);
+//   endShape();
+//   // right outer wing
+//   beginShape();
+//     vertex(p.stepBottomRight.x, p.stepBottomRight.y, p.stepBottomRight.z);
+//     vertex(p.stepTopRight.x, p.stepTopRight.y, p.stepTopRight.z);
+//     vertex(p.stepOuterWingTopRight.x, p.stepOuterWingTopRight.y, p.stepOuterWingTopRight.z);
+//     vertex(p.stepOuterWingBottomRight.x, p.stepOuterWingBottomRight.y, p.stepOuterWingBottomRight.z);
+//     vertex(p.stepBottomRight.x, p.stepBottomRight.y, p.stepBottomRight.z);
+//   endShape();
+//   //left inner wing
+//     beginShape();
+//       vertex(p.stepOuterWingBottomLeft.x, p.stepOuterWingBottomLeft.y, p.stepOuterWingBottomLeft.z);
+//       vertex(p.stepOuterWingTopLeft.x, p.stepOuterWingTopLeft.y, p.stepOuterWingTopLeft.z);
+//       vertex(p.stepInnerWingTopLeft.x, p.stepInnerWingTopLeft.y, p.stepInnerWingTopLeft.z);
+//       vertex(p.stepInnerWingBottomLeft.x, p.stepInnerWingBottomLeft.y, p.stepInnerWingBottomLeft.z);
+//       vertex(p.stepOuterWingBottomLeft.x, p.stepOuterWingBottomLeft.y, p.stepOuterWingBottomLeft.z);
+//     endShape();
+//   // right inner wing
+//     beginShape();
+//       vertex(p.stepOuterWingBottomRight.x, p.stepOuterWingBottomRight.y, p.stepOuterWingBottomRight.z);
+//       vertex(p.stepOuterWingTopRight.x, p.stepOuterWingTopRight.y, p.stepOuterWingTopRight.z);
+//       vertex(p.stepInnerWingTopRight.x, p.stepInnerWingTopRight.y, p.stepInnerWingTopRight.z);
+//       vertex(p.stepInnerWingBottomRight.x, p.stepInnerWingBottomRight.y, p.stepInnerWingBottomRight.z);
+//       vertex(p.stepOuterWingBottomRight.x, p.stepOuterWingBottomRight.y, p.stepOuterWingBottomRight.z);
+//     endShape();
+//   //step middle front
+//     beginShape();
+//       vertex(p.stepInnerWingTopLeft.x, p.stepInnerWingTopLeft.y, p.stepInnerWingTopLeft.z);
+//       vertex(p.stepInnerWingBottomLeft.x, p.stepInnerWingBottomLeft.y, p.stepInnerWingBottomLeft.z);
+//       vertex(p.stepInnerWingBottomRight.x, p.stepInnerWingBottomRight.y, p.stepInnerWingBottomRight.z);
+//       vertex(p.stepInnerWingTopRight.x, p.stepInnerWingTopRight.y, p.stepInnerWingTopRight.z);
+//       vertex(p.stepInnerWingTopLeft.x, p.stepInnerWingTopLeft.y, p.stepInnerWingTopLeft.z);
+//     endShape();
 
 
-  //top middle
-  beginShape();
-    vertex(points.stepInnerWingBottomLeft[0], points.stepInnerWingBottomLeft[1], points.stepInnerWingBottomLeft[2]);
-    vertex(points.glacisTopMiddleLeft[0], points.glacisTopMiddleLeft[1], points.glacisTopMiddleLeft[2]);
-    vertex(points.glacisTopMiddleRight[0], points.glacisTopMiddleRight[1], points.glacisTopMiddleRight[2]);
-    vertex(points.stepInnerWingBottomRight[0], points.stepInnerWingBottomRight[1], points.stepInnerWingBottomRight[2]);
-  endShape();
-  //top middle left
-  beginShape();
-    vertex(points.glacisTopLeft[0], points.glacisTopLeft[1], points.glacisTopLeft[2]);
-    vertex(points.stepInnerWingBottomLeft[0], points.stepInnerWingBottomLeft[1], points.stepInnerWingBottomLeft[2]);
-    vertex(points.glacisTopMiddleLeft[0], points.glacisTopMiddleLeft[1], points.glacisTopMiddleLeft[2]);
-  endShape();
-  //top middle right
-  beginShape();
-    vertex(points.glacisTopRight[0], points.glacisTopRight[1], points.glacisTopRight[2]);
-    vertex(points.stepInnerWingBottomRight[0], points.stepInnerWingBottomRight[1], points.stepInnerWingBottomRight[2]);
-    vertex(points.glacisTopMiddleRight[0], points.glacisTopMiddleRight[1], points.glacisTopMiddleRight[2]);
-  endShape();
-  //top outer left
-  beginShape();
-    vertex(points.stepInnerWingBottomLeft[0], points.stepInnerWingBottomLeft[1], points.stepInnerWingBottomLeft[2]);
-    vertex(points.glacisTopLeft[0], points.glacisTopLeft[1], points.glacisTopLeft[2]);
-    vertex(points.stepOuterWingBottomLeft[0], points.stepOuterWingBottomLeft[1], points.stepOuterWingBottomLeft[2]);
-  endShape();
-  // top outer right
-  beginShape();
-    vertex(points.stepInnerWingBottomRight[0], points.stepInnerWingBottomRight[1], points.stepInnerWingBottomRight[2]);
-    vertex(points.glacisTopRight[0], points.glacisTopRight[1], points.glacisTopRight[2]);
-    vertex(points.stepOuterWingBottomRight[0], points.stepOuterWingBottomRight[1], points.stepOuterWingBottomRight[2]);
-  endShape();
-  // top outer left left
-  beginShape();
-    vertex(points.stepOuterWingBottomLeft[0], points.stepOuterWingBottomLeft[1], points.stepOuterWingBottomLeft[2]);
-    vertex(points.glacisTopLeft[0], points.glacisTopLeft[1], points.glacisTopLeft[2]);
-    vertex(points.stepBottomLeft[0], points.stepBottomLeft[1], points.stepBottomLeft[2]);
-  endShape();
-  // top outer right right
-  beginShape();
-    vertex(points.stepOuterWingBottomRight[0], points.stepOuterWingBottomRight[1], points.stepOuterWingBottomRight[2]);
-    vertex(points.glacisTopRight[0], points.glacisTopRight[1], points.glacisTopRight[2]);
-    vertex(points.stepBottomRight[0], points.stepBottomRight[1], points.stepBottomRight[2]);
-  endShape();
-  //side
-    // side right
-    beginShape();
-      vertex(points.stepBottomRight[0], points.stepBottomRight[1], points.stepBottomRight[2]);
-      vertex(points.flankGlacisTopRight[0], points.flankGlacisTopRight[1], points.flankGlacisTopRight[2]);
-      vertex(points.stepTopRightFlank[0], points.stepTopRightFlank[1], points.stepTopRightFlank[2]);
-      vertex(points.stepTopRight[0], points.stepTopRight[1], points.stepTopRight[2]);
-      vertex(points.stepBottomRight[0], points.stepBottomRight[1], points.stepBottomRight[2]);
-    endShape();
-    // side left
-    beginShape();
-    vertex(points.stepBottomLeft[0], points.stepBottomLeft[1], points.stepBottomLeft[2]);
-    vertex(points.flankGlacisTopLeft[0], points.flankGlacisTopLeft[1], points.flankGlacisTopLeft[2]);
-    vertex(points.stepTopLeftFlank[0], points.stepTopLeftFlank[1], points.stepTopLeftFlank[2]);
-    vertex(points.stepTopLeft[0], points.stepTopLeft[1], points.stepTopLeft[2]);
-    vertex(points.stepBottomLeft[0], points.stepBottomLeft[1], points.stepBottomLeft[2]);
-  endShape();
+//   //top middle
+//   beginShape();
+//     vertex(p.stepInnerWingBottomLeft.x, p.stepInnerWingBottomLeft.y, p.stepInnerWingBottomLeft.z);
+//     vertex(p.glacisTopMiddleLeft.x, p.glacisTopMiddleLeft.y, p.glacisTopMiddleLeft.z);
+//     vertex(p.glacisTopMiddleRight.x, p.glacisTopMiddleRight.y, p.glacisTopMiddleRight.z);
+//     vertex(p.stepInnerWingBottomRight.x, p.stepInnerWingBottomRight.y, p.stepInnerWingBottomRight.z);
+//   endShape();
+//   //top middle left
+//   beginShape();
+//     vertex(p.glacisTopLeft.x, p.glacisTopLeft.y, p.glacisTopLeft.z);
+//     vertex(p.stepInnerWingBottomLeft.x, p.stepInnerWingBottomLeft.y, p.stepInnerWingBottomLeft.z);
+//     vertex(p.glacisTopMiddleLeft.x, p.glacisTopMiddleLeft.y, p.glacisTopMiddleLeft.z);
+//   endShape();
+//   //top middle right
+//   beginShape();
+//     vertex(p.glacisTopRight.x, p.glacisTopRight.y, p.glacisTopRight.z);
+//     vertex(p.stepInnerWingBottomRight.x, p.stepInnerWingBottomRight.y, p.stepInnerWingBottomRight.z);
+//     vertex(p.glacisTopMiddleRight.x, p.glacisTopMiddleRight.y, p.glacisTopMiddleRight.z);
+//   endShape();
+//   //top outer left
+//   beginShape();
+//     vertex(p.stepInnerWingBottomLeft.x, p.stepInnerWingBottomLeft.y, p.stepInnerWingBottomLeft.z);
+//     vertex(p.glacisTopLeft.x, p.glacisTopLeft.y, p.glacisTopLeft.z);
+//     vertex(p.stepOuterWingBottomLeft.x, p.stepOuterWingBottomLeft.y, p.stepOuterWingBottomLeft.z);
+//   endShape();
+//   // top outer right
+//   beginShape();
+//     vertex(p.stepInnerWingBottomRight.x, p.stepInnerWingBottomRight.y, p.stepInnerWingBottomRight.z);
+//     vertex(p.glacisTopRight.x, p.glacisTopRight.y, p.glacisTopRight.z);
+//     vertex(p.stepOuterWingBottomRight.x, p.stepOuterWingBottomRight.y, p.stepOuterWingBottomRight.z);
+//   endShape();
+//   // top outer left left
+//   beginShape();
+//     vertex(p.stepOuterWingBottomLeft.x, p.stepOuterWingBottomLeft.y, p.stepOuterWingBottomLeft.z);
+//     vertex(p.glacisTopLeft.x, p.glacisTopLeft.y, p.glacisTopLeft.z);
+//     vertex(p.stepBottomLeft.x, p.stepBottomLeft.y, p.stepBottomLeft.z);
+//   endShape();
+//   // top outer right right
+//   beginShape();
+//     vertex(p.stepOuterWingBottomRight.x, p.stepOuterWingBottomRight.y, p.stepOuterWingBottomRight.z);
+//     vertex(p.glacisTopRight.x, p.glacisTopRight.y, p.glacisTopRight.z);
+//     vertex(p.stepBottomRight.x, p.stepBottomRight.y, p.stepBottomRight.z);
+//   endShape();
+//   //side
+//     // side right
+//     beginShape();
+//       vertex(p.stepBottomRight.x, p.stepBottomRight.y, p.stepBottomRight.z);
+//       vertex(p.flankGlacisTopRight.x, p.flankGlacisTopRight.y, p.flankGlacisTopRight.z);
+//       vertex(p.stepTopRightFlank.x, p.stepTopRightFlank.y, p.stepTopRightFlank.z);
+//       vertex(p.stepTopRight.x, p.stepTopRight.y, p.stepTopRight.z);
+//       vertex(p.stepBottomRight.x, p.stepBottomRight.y, p.stepBottomRight.z);
+//     endShape();
+//     // side left
+//     beginShape();
+//     vertex(p.stepBottomLeft.x, p.stepBottomLeft.y, p.stepBottomLeft.z);
+//     vertex(p.flankGlacisTopLeft.x, p.flankGlacisTopLeft.y, p.flankGlacisTopLeft.z);
+//     vertex(p.stepTopLeftFlank.x, p.stepTopLeftFlank.y, p.stepTopLeftFlank.z);
+//     vertex(p.stepTopLeft.x, p.stepTopLeft.y, p.stepTopLeft.z);
+//     vertex(p.stepBottomLeft.x, p.stepBottomLeft.y, p.stepBottomLeft.z);
+//   endShape();
     
 
-}
+// }
 };
 const drawTreads = {
-  frontSprocket: (points) => {
+  frontSprocket: (p) => {
     let thickness = 30;
-    translate(points.bumperBottomLeft[0], points.bumperBottomLeft[1], points.glacisWingLeftPit[2]-(thickness/2));
+    translate(p.bumperBottomLeft.x, p.bumperBottomLeft.y, p.glacisWingLeftPit.z-(thickness/2));
     rotateX(90);
     cylinder(20, thickness);
   },
@@ -548,8 +489,8 @@ font = loadFont("Ubuntu-Light.ttf");
 
 function setup() {
   angleMode(DEGREES);
-  createCanvas(1600, 800, WEBGL);
-
+  createCanvas(windowWidth, windowHeight, WEBGL);
+  
   addSliders();
   addChecks();
   
@@ -593,293 +534,334 @@ function draw() {
     },
 
   }
-  const points = {
-    glacisTopLeft: [
-      tank.x,
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value())+glacisHeight.value()),
-      tank.z-(glacisTopWidth.value()-(Math.ceil(wingGlacisPercent.value()-1)*waistWidth.value())), 
-    ],
-    glacisTopMiddleLeft: [
-      tank.x-(bumperPikeHeight.value())*(bumperTopDepth.value()/glacisHeight.value()),
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value())+glacisHeight.value()),
-      tank.z-(midGlacisWidth.value()),
-    ],
-    glacisTopMiddleRight: [
-      tank.x-(bumperPikeHeight.value())*(bumperTopDepth.value()/glacisHeight.value()),
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value())+glacisHeight.value()),
-      tank.z+(midGlacisWidth.value()),
-    ],
-    glacisTopRight: [
-      tank.x,
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value())+glacisHeight.value()),
-      tank.z+(glacisTopWidth.value()-(Math.ceil(wingGlacisPercent.value()-1)*waistWidth.value())),
-    ],
-    glacisWingRightShoulder: [
-      tank.x+(wingOuterEdgeDepth.value()*Math.ceil(wingGlacisPercent.value())),
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value())+glacisHeight.value()),
-      tank.z+((glacisTopWidth.value()) -(waistWidth.value()*Math.ceil(wingGlacisPercent.value()-1)) + wingTopWidth.value()*Math.ceil(wingGlacisPercent.value())),
-    ],
-    glacisWingRightBottom: [
-      tank.x-(bumperTopDepth.value() * wingGlacisPercent.value()) + (wingOuterEdgeDepth.value()*Math.ceil(wingGlacisPercent.value())),
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value())+glacisHeight.value() - (glacisHeight.value() * wingGlacisPercent.value())),
-      tank.z+(glacisTopWidth.value() +waistWidth.value()) + (((bumperWidth.value() - glacisTopWidth.value()) ) * wingGlacisPercent.value() + wingBottomWidth.value())*Math.ceil(wingGlacisPercent.value()) ,
-    ],
-    glacisWingRightPit: [
-      tank.x-bumperTopDepth.value() * wingGlacisPercent.value(),
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value())+glacisHeight.value() - (glacisHeight.value() * wingGlacisPercent.value())),
-      tank.z+(glacisTopWidth.value() + waistWidth.value()) + ((bumperWidth.value() - glacisTopWidth.value()) ) * wingGlacisPercent.value(),
-    ],
-    glacisWingRightPitFlank:[
-      tank.x,
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value())+glacisHeight.value()-(glacisHeight.value() * wingGlacisPercent.value())),
-      tank.z+(glacisTopWidth.value() + waistWidth.value()) + ((bumperWidth.value() - glacisTopWidth.value()) ) * wingGlacisPercent.value(),
-    ],
-    glacisWingRightBottomFlank:[
-      tank.x+(wingOuterEdgeDepth.value()*Math.ceil(wingGlacisPercent.value())),
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value())+glacisHeight.value()-(glacisHeight.value() * wingGlacisPercent.value())),
-      tank.z+(glacisTopWidth.value()  + waistWidth.value() + (((bumperWidth.value() - glacisTopWidth.value()) ) * wingGlacisPercent.value() + wingBottomWidth.value())*Math.ceil(wingGlacisPercent.value()) ),
-    ],
-    glacisWingLeftShoulder: [
-      tank.x+(wingOuterEdgeDepth.value()*Math.ceil(wingGlacisPercent.value())),
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value())+glacisHeight.value()),
-      tank.z-(glacisTopWidth.value() - (waistWidth.value()*Math.ceil(wingGlacisPercent.value()-1)) + wingTopWidth.value()*Math.ceil(wingGlacisPercent.value())),
-    ],
-    glacisWingLeftBottom: [
-      tank.x-(bumperTopDepth.value() * wingGlacisPercent.value()) + (wingOuterEdgeDepth.value()*Math.ceil(wingGlacisPercent.value())),
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value())+glacisHeight.value() - (glacisHeight.value() * wingGlacisPercent.value())),
-      tank.z-(glacisTopWidth.value()  + (waistWidth.value() + ((bumperWidth.value() - glacisTopWidth.value()) ) * wingGlacisPercent.value() + wingBottomWidth.value() )*Math.ceil(wingGlacisPercent.value())),
-    ],
-    glacisWingLeftPit: [
-      tank.x-bumperTopDepth.value() * wingGlacisPercent.value(),
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value())+glacisHeight.value() - (glacisHeight.value() * wingGlacisPercent.value())),
-      tank.z-(glacisTopWidth.value()  + waistWidth.value()+ ((bumperWidth.value() - glacisTopWidth.value()) ) * wingGlacisPercent.value()),
-    ],
-    glacisWingLeftPitFlank:[
-      tank.x,
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value())+glacisHeight.value()-(glacisHeight.value() * wingGlacisPercent.value())),
-      tank.z-(glacisTopWidth.value()  + waistWidth.value()+ ((bumperWidth.value() - glacisTopWidth.value()) ) * wingGlacisPercent.value()),
-    ],
-    glacisWingLeftBottomFlank:[
-      tank.x+(wingOuterEdgeDepth.value()*Math.ceil(wingGlacisPercent.value())),
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value())+glacisHeight.value()-(glacisHeight.value() * wingGlacisPercent.value())),
-      tank.z-(glacisTopWidth.value()  + waistWidth.value() + (((bumperWidth.value() - glacisTopWidth.value()) ) * wingGlacisPercent.value() + wingBottomWidth.value())*Math.ceil(wingGlacisPercent.value()) ),
-    ],
-    glacisBottomLeft: [
-      tank.x-(bumperTopDepth.value()+((bumperBottomDepth.value()*bumperPikeHeight.value())/(bumperPikeHeight.value()+bumperHeight.value()))*pointHelpers.pikeAndSlope),
-      tank.y-(bottomPlateHeight.value()+bumperHeight.value()), 
-      tank.z-bumperWidth.value() 
-    ],
-    glacisBottomRight: [
-      tank.x-(bumperTopDepth.value()+((bumperBottomDepth.value()*bumperPikeHeight.value())/(bumperPikeHeight.value()+bumperHeight.value()))*pointHelpers.pikeAndSlope),
-      tank.y-(bottomPlateHeight.value()+bumperHeight.value()), 
-      tank.z+bumperWidth.value() 
-    ],
-    glacisBottomMiddleLeft: [
-      tank.x-bumperTopDepth.value(),
-      tank.y-(bottomPlateHeight.value()+bumperHeight.value()+bumperPikeHeight.value()),
-      tank.z-(midGlacisWidth.value()),
-    ],
-    glacisBottomMiddleRight: [
-      tank.x-bumperTopDepth.value(),
-      tank.y-(bottomPlateHeight.value()+bumperHeight.value()+bumperPikeHeight.value()),
-      tank.z+(midGlacisWidth.value()),
-    ],
+  const q = {
+    gTopY: bottomPlateHeight.value() + bumperHeight.value() + glacisHeight.value(),
+    gTopCornZ: midGlacisWidth.value()+glacisTopWidth.value()-(Math.ceil(wingGlacisPercent.value()-1)*waistWidth.value()),
     
-    bumperBottomRight:[
-      tank.x-(bumperTopDepth.value()+(bumperBottomDepth.value()*pointHelpers.bumperHasHeight)),
-      tank.y-bottomPlateHeight.value(), 
-      tank.z+bumperWidth.value()
-    ],
-    bumperBottomLeft:[
-      tank.x-(bumperTopDepth.value()+(bumperBottomDepth.value()*pointHelpers.bumperHasHeight)), 
-      tank.y-bottomPlateHeight.value(),
-      tank.z-bumperWidth.value()
-    ],
-    bumperBottomRightFlank:[
-      tank.x-((bumperTopDepth.value() * wingGlacisPercent.value())+(((bumperTopDepth.value()*wingGlacisPercent.value())+bumperBottomDepth.value())*pointHelpers.bumperOverZero)),
-      tank.y-(bottomPlateHeight.value()),
-      tank.z+(bumperWidth.value()+waistWidth.value()),
-    ],
-    bumperBottomLeftFlank:[
-      tank.x-((bumperTopDepth.value() * wingGlacisPercent.value())+(((bumperTopDepth.value()*wingGlacisPercent.value())+bumperBottomDepth.value())*pointHelpers.bumperOverZero)),
-      tank.y-(bottomPlateHeight.value()),
-      tank.z-(bumperWidth.value()+waistWidth.value()),
-    ],
-    bottomPlateLeft:[
-      tank.x-(bottomPlateDepth.value()),
-      tank.y,
-      tank.z-bottomPlateWidth.value()
-    ],
-    bottomPlateRight:[
-      tank.x-(bottomPlateDepth.value()),
-      tank.y,
-      tank.z+bottomPlateWidth.value(),
-    ],
-    flankBottomPlateRight:[
-      tank.x+(overallDepth.value()+stepDepth.value()),
-      tank.y,
-      tank.z+bottomPlateWidth.value(),
-    ],
-    flankBumperBottomRightFlank:[
-      tank.x+(overallDepth.value()+stepDepth.value()),
-      tank.y-(bottomPlateHeight.value()),
-      tank.z+(bumperWidth.value()+waistWidth.value()),
-    ],
-    flankGlacisWingRightPitFlank:[
-      tank.x+(overallDepth.value()+stepDepth.value()),
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value())+glacisHeight.value()-(glacisHeight.value() * wingGlacisPercent.value())),
-      tank.z+(glacisTopWidth.value() + waistWidth.value()) + ((bumperWidth.value() - glacisTopWidth.value()) ) * wingGlacisPercent.value(),
-    ],
-    flankGlacisWingRightBottomFlank:[
-      tank.x+(overallDepth.value()+stepDepth.value()),
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value())+glacisHeight.value()-(glacisHeight.value() * wingGlacisPercent.value())),
-      tank.z+(glacisTopWidth.value()  + waistWidth.value()) + ((bumperWidth.value() - glacisTopWidth.value())  * wingGlacisPercent.value() + wingBottomWidth.value() )*Math.ceil(wingGlacisPercent.value()),
-    ],
-    flankGlacisWingLeftBottomFlank:[
-      tank.x+(overallDepth.value()+stepDepth.value()),
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value())+glacisHeight.value()-(glacisHeight.value() * wingGlacisPercent.value())),
-      tank.z-((glacisTopWidth.value()  + waistWidth.value()) + ((bumperWidth.value() - glacisTopWidth.value()) * wingGlacisPercent.value() + wingBottomWidth.value() )*Math.ceil(wingGlacisPercent.value())),
-    ],
-    flankGlacisWingRightShoulder:[
-      tank.x+(overallDepth.value()+stepDepth.value()),
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value())+glacisHeight.value()),
-      tank.z+(glacisTopWidth.value()) -(waistWidth.value()*(Math.ceil(wingGlacisPercent.value()-1))) + wingTopWidth.value()*Math.ceil(wingGlacisPercent.value()),
-    ],
+    gTopMidX: (bumperPikeHeight.value())*(bumperTopDepth.value()/glacisHeight.value()),
+    gMidZ: midGlacisWidth.value(),
     
-    flankBottomPlateLeft:[
-      tank.x+(overallDepth.value()+stepDepth.value()),
-      tank.y,
-      tank.z-(bottomPlateWidth.value()),
-    ],
-    flankBumperBottomLeftFlank:[
-      tank.x+(overallDepth.value()+stepDepth.value()),
-      tank.y-(bottomPlateHeight.value()),
-      tank.z-(bumperWidth.value()+waistWidth.value()),
-    ],
-    flankGlacisWingLeftPitFlank:[
-      tank.x+(overallDepth.value()+stepDepth.value()),
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value())+glacisHeight.value()-(glacisHeight.value() * wingGlacisPercent.value())),
-      tank.z-(glacisTopWidth.value() + waistWidth.value()) - (bumperWidth.value() - glacisTopWidth.value()) * wingGlacisPercent.value(),
-    ],
+    gWaistX: bumperTopDepth.value() * wingGlacisPercent.value(),
+    gWaistY: bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value() - (glacisHeight.value() * wingGlacisPercent.value()),
+    gWaistZ: midGlacisWidth.value() + glacisTopWidth.value() + waistWidth.value() + ((bumperWidth.value() - glacisTopWidth.value()) ) * wingGlacisPercent.value(),
 
-    flankGlacisWingLeftShoulder:[
-      tank.x+(overallDepth.value()+stepDepth.value()),
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value())+glacisHeight.value()),
-      tank.z-(glacisTopWidth.value() -(waistWidth.value()*(Math.ceil(wingGlacisPercent.value()-1)))  + wingTopWidth.value()*Math.ceil(wingGlacisPercent.value()))
-    ],
-    flankGlacisTopLeft:[
-      tank.x+(overallDepth.value()+stepDepth.value()),
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepBottomHeight.value()),
-      tank.z-((stepOuterPanelWidth.value()+stepCentralPanelWidth.value()+stepBetweenPanelWidth.value())),
-    ],
-    flankGlacisTopRight:[
-      tank.x+(overallDepth.value()+stepDepth.value()),
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value()) + stepBottomHeight.value()),
-      tank.z+((stepOuterPanelWidth.value()+stepCentralPanelWidth.value()+stepBetweenPanelWidth.value())),
-    ],
+    gBotCornX: (bumperTopDepth.value()+((bumperBottomDepth.value()*bumperPikeHeight.value())/(bumperPikeHeight.value()+bumperHeight.value()))*pointHelpers.pikeAndSlope),
+    gBotCornY: bottomPlateHeight.value()+bumperHeight.value(),
+    gBotCornZ: midGlacisWidth.value() + bumperWidth.value(),
 
-    stepTopLeft:[
-      tank.x+((stepDepth.value()+stepOuterEdgeDepth.value()+stepInnerEdgeDepth.value()+stepTopDepth.value())*pointHelpers.stepHasHeight)+(wingOuterEdgeDepth.value()*pointHelpers.stepNotHasHeight),
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepHeight.value()+stepBottomHeight.value()),
-      tank.z-(stepOuterPanelWidth.value()+stepCentralPanelWidth.value()+stepBetweenPanelWidth.value()),
-    ],
-    stepTopRight:[
-      tank.x+((stepDepth.value()+stepOuterEdgeDepth.value()+stepInnerEdgeDepth.value()+stepTopDepth.value())*pointHelpers.stepHasHeight)+(wingOuterEdgeDepth.value()*pointHelpers.stepNotHasHeight),
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepHeight.value()+stepBottomHeight.value()),
-      tank.z+(stepOuterPanelWidth.value()+stepCentralPanelWidth.value()+stepBetweenPanelWidth.value()),
-    ],
-    stepTopRightFlank: [
-      tank.x+(overallDepth.value()+stepDepth.value()),
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepHeight.value()+stepBottomHeight.value()),
-      tank.z+(stepOuterPanelWidth.value()+stepCentralPanelWidth.value()+stepBetweenPanelWidth.value()),
-    ],
-    stepTopLeftFlank:[
-      tank.x+(overallDepth.value()+stepDepth.value()),
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepHeight.value()+stepBottomHeight.value()),
-      tank.z-(stepOuterPanelWidth.value()+stepCentralPanelWidth.value()+stepBetweenPanelWidth.value()),
-    ],
+    gBotMidX: bumperTopDepth.value(),
+    gBotMidY: bottomPlateHeight.value()+bumperHeight.value()+bumperPikeHeight.value(),
 
-    stepBottomLeft:[
-      tank.x+((stepDepth.value()+stepOuterEdgeDepth.value()+stepInnerEdgeDepth.value())*pointHelpers.stepHasHeight)+(wingOuterEdgeDepth.value()*pointHelpers.stepNotHasHeight),
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepBottomHeight.value()),
-      tank.z-(stepOuterPanelWidth.value()+stepCentralPanelWidth.value()+stepBetweenPanelWidth.value()),
-    ],
-    stepBottomRight:[
-      tank.x+((stepDepth.value()+stepOuterEdgeDepth.value()+stepInnerEdgeDepth.value())*pointHelpers.stepHasHeight)+(wingOuterEdgeDepth.value()*pointHelpers.stepNotHasHeight),
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepBottomHeight.value()),
-      tank.z+(stepOuterPanelWidth.value()+stepCentralPanelWidth.value()+stepBetweenPanelWidth.value()),
-    ],
+    wTopCornX: (wingOuterEdgeDepth.value()*Math.ceil(wingGlacisPercent.value())),
+    wTopCornZ: (midGlacisWidth.value() + glacisTopWidth.value() -(waistWidth.value()*Math.ceil(wingGlacisPercent.value()-1)) + wingTopWidth.value()*Math.ceil(wingGlacisPercent.value())),
+
+    wBotCornX: (bumperTopDepth.value() * wingGlacisPercent.value()) - (wingOuterEdgeDepth.value()*Math.ceil(wingGlacisPercent.value())),
+    wBotCornZ: (midGlacisWidth.value() + glacisTopWidth.value() +waistWidth.value()) + (((bumperWidth.value() - glacisTopWidth.value()) ) * wingGlacisPercent.value() + wingBottomWidth.value())*Math.ceil(wingGlacisPercent.value()),
+
+    bBotCornX: (bumperTopDepth.value()+(bumperBottomDepth.value()*pointHelpers.bumperHasHeight)),
+    bBotCornY: bottomPlateHeight.value(),
+    bBotCornZ: bumperWidth.value(),
+
+  }
+  const p = {
+    gTopCorn: createVector( 0, -q.gTopY, q.gTopCornZ ),
+    gTopMid: createVector(-q.gTopMidX, -q.gTopY, q.gMidZ ),
+    gWaist: createVector( -q.gWaistX, -q.gWaistY, q.gWaistZ ),
+    gBotCorn: createVector( -q.gBotCornX, -q.gBotCornY, q.gBotCornZ),
+    gBotMid: createVector(-q.gBotMidX, -q.gBotMidY, q.gMidZ),
+    wTopCorn: createVector( q.wTopCornX, -q.gTopY, q.wTopCornZ),
+    wBotCorn: createVector(-q.wBotCornX, -q.gWaistY, q.wBotCornZ),
+    bBotCorn: createVector( -q.bBotCornX, -q.bBotCornY, q.bBotCornZ),
+
+
+    glacisTopLeft: createVector(
+      0,
+      0-q.gTopY,
+      0-q.gTopCornZ, 
+    ),
+    glacisTopMiddleLeft: createVector(
+      0-q.gTopMidX,
+      0-q.gTopY,
+      0-q.gMidZ,
+    ),
+    glacisTopMiddleRight: createVector(
+      0-q.gTopMidX,
+      0-q.gTopY,
+      0+q.gMidZ,
+    ),
+    glacisTopRight: createVector(
+      0,
+      0-q.gTopY,
+      0+q.gTopCornZ,
+    ),
+    glacisWingRightShoulder: createVector(
+      0+q.wTopCornX,
+      0-q.gTopY,
+      0+q.wBotCornZ,
+    ),
+    glacisWingRightBottom: createVector(
+      0-q.wBotCornX,
+      0-q.gWaistY,
+      0+q.wBotCornZ,
+    ),
+    glacisWingRightPit: createVector(
+      0-q.gWaistX,
+      0-q.gWaistY,
+      0+q.gWaistZ,
+    ),
+    glacisWingRightPitFlank: createVector(
+      0,
+      0-((bottomPlateHeight.value()+bumperHeight.value())+glacisHeight.value()-(glacisHeight.value() * wingGlacisPercent.value())),
+      0+q.gWaistZ,
+    ),
+    glacisWingRightBottomFlank: createVector(
+      0+(wingOuterEdgeDepth.value()*Math.ceil(wingGlacisPercent.value())),
+      0-((bottomPlateHeight.value()+bumperHeight.value())+glacisHeight.value()-(glacisHeight.value() * wingGlacisPercent.value())),
+      0+(glacisTopWidth.value()  + waistWidth.value() + (((bumperWidth.value() - glacisTopWidth.value()) ) * wingGlacisPercent.value() + wingBottomWidth.value())*Math.ceil(wingGlacisPercent.value()) ),
+    ),
+    glacisWingLeftShoulder: createVector(
+      0+q.wTopCornX,
+      0-q.gTopY,
+      0-(glacisTopWidth.value() - (waistWidth.value()*Math.ceil(wingGlacisPercent.value()-1)) + wingTopWidth.value()*Math.ceil(wingGlacisPercent.value())),
+    ),
+    glacisWingLeftBottom: createVector(
+      0-(bumperTopDepth.value() * wingGlacisPercent.value()) + (wingOuterEdgeDepth.value()*Math.ceil(wingGlacisPercent.value())),
+      0-q.gWaistY,
+      0-(glacisTopWidth.value()  + (waistWidth.value() + ((bumperWidth.value() - glacisTopWidth.value()) ) * wingGlacisPercent.value() + wingBottomWidth.value() )*Math.ceil(wingGlacisPercent.value())),
+    ),
+    glacisWingLeftPit: createVector(
+      0-q.gWaistX,
+      0-q.gWaistY,
+      0-(glacisTopWidth.value()  + waistWidth.value()+ ((bumperWidth.value() - glacisTopWidth.value()) ) * wingGlacisPercent.value()),
+    ),
+    glacisWingLeftPitFlank: createVector(
+      0,
+      0-((bottomPlateHeight.value()+bumperHeight.value())+glacisHeight.value()-(glacisHeight.value() * wingGlacisPercent.value())),
+      0-(glacisTopWidth.value()  + waistWidth.value()+ ((bumperWidth.value() - glacisTopWidth.value()) ) * wingGlacisPercent.value()),
+    ),
+    glacisWingLeftBottomFlank: createVector(
+      0+(wingOuterEdgeDepth.value()*Math.ceil(wingGlacisPercent.value())),
+      0-((bottomPlateHeight.value()+bumperHeight.value())+glacisHeight.value()-(glacisHeight.value() * wingGlacisPercent.value())),
+      0-q.gWaistZ,
+    ),
+    glacisBottomLeft: createVector(
+      0-q.gBotCornX,
+      0-q.gBotCornY, 
+      0-q.gBotCornZ, 
+    ),
+    glacisBottomRight: createVector(
+      0-q.gBotCornX,
+      0-q.gBotCornY, 
+      0+q.gBotCornZ, 
+    ),
+    glacisBottomMiddleLeft: createVector(
+      0-bumperTopDepth.value(),
+      0-q.gBotMidY,
+      0-(midGlacisWidth.value()),
+    ),
+    glacisBottomMiddleRight: createVector(
+      0-bumperTopDepth.value(),
+      0-q.gBotMidY,
+      0+(midGlacisWidth.value()),
+    ),
+    
+    bumperBottomRight: createVector(
+      0-q.bBotCornX,
+      0-q.bBotCornY, 
+      0+q.bBotCornZ,
+    ),
+    bumperBottomLeft: createVector(
+      0-q.bBotCornX, 
+      0-q.bBotCornY,
+      0-q.bBotCornZ
+    ),
+    bumperBottomRightFlank: createVector(
+      0-((bumperTopDepth.value() * wingGlacisPercent.value())+(((bumperTopDepth.value()*wingGlacisPercent.value())+bumperBottomDepth.value())*pointHelpers.bumperOverZero)),
+      0-(bottomPlateHeight.value()),
+      0+(bumperWidth.value()+waistWidth.value()),
+    ),
+    bumperBottomLeftFlank: createVector(
+      0-((bumperTopDepth.value() * wingGlacisPercent.value())+(((bumperTopDepth.value()*wingGlacisPercent.value())+bumperBottomDepth.value())*pointHelpers.bumperOverZero)),
+      0-(bottomPlateHeight.value()),
+      0-(bumperWidth.value()+waistWidth.value()),
+    ),
+    bottomPlateLeft: createVector(
+      0-(bottomPlateDepth.value()),
+      0,
+      0-bottomPlateWidth.value()
+    ),
+    bottomPlateRight: createVector(
+      0-(bottomPlateDepth.value()),
+      0,
+      0+bottomPlateWidth.value(),
+    ),
+    flankBottomPlateRight: createVector(
+      0+(overallDepth.value()+stepDepth.value()),
+      0,
+      0+bottomPlateWidth.value(),
+    ),
+    flankBumperBottomRightFlank: createVector(
+      0+(overallDepth.value()+stepDepth.value()),
+      0-(bottomPlateHeight.value()),
+      0+(bumperWidth.value()+waistWidth.value()),
+    ),
+    flankGlacisWingRightPitFlank: createVector(
+      0+(overallDepth.value()+stepDepth.value()),
+      0-((bottomPlateHeight.value()+bumperHeight.value())+glacisHeight.value()-(glacisHeight.value() * wingGlacisPercent.value())),
+      0+q.gWaistZ,
+    ),
+    flankGlacisWingRightBottomFlank: createVector(
+      0+(overallDepth.value()+stepDepth.value()),
+      0-((bottomPlateHeight.value()+bumperHeight.value())+glacisHeight.value()-(glacisHeight.value() * wingGlacisPercent.value())),
+      0+(glacisTopWidth.value()  + waistWidth.value()) + ((bumperWidth.value() - glacisTopWidth.value())  * wingGlacisPercent.value() + wingBottomWidth.value() )*Math.ceil(wingGlacisPercent.value()),
+    ),
+    flankGlacisWingLeftBottomFlank: createVector(
+      0+(overallDepth.value()+stepDepth.value()),
+      0-((bottomPlateHeight.value()+bumperHeight.value())+glacisHeight.value()-(glacisHeight.value() * wingGlacisPercent.value())),
+      0-((glacisTopWidth.value()  + waistWidth.value()) + ((bumperWidth.value() - glacisTopWidth.value()) * wingGlacisPercent.value() + wingBottomWidth.value() )*Math.ceil(wingGlacisPercent.value())),
+    ),
+    flankGlacisWingRightShoulder: createVector(
+      0+(overallDepth.value()+stepDepth.value()),
+      0-q.gTopY,
+      0+(glacisTopWidth.value()) -(waistWidth.value()*(Math.ceil(wingGlacisPercent.value()-1))) + wingTopWidth.value()*Math.ceil(wingGlacisPercent.value()),
+    ),
+    
+    flankBottomPlateLeft: createVector(
+      0+(overallDepth.value()+stepDepth.value()),
+      0,
+      0-(bottomPlateWidth.value()),
+    ),
+    flankBumperBottomLeftFlank: createVector(
+      0+(overallDepth.value()+stepDepth.value()),
+      0-(bottomPlateHeight.value()),
+      0-(bumperWidth.value()+waistWidth.value()),
+    ),
+    flankGlacisWingLeftPitFlank: createVector(
+      0+(overallDepth.value()+stepDepth.value()),
+      0-((bottomPlateHeight.value()+bumperHeight.value())+glacisHeight.value()-(glacisHeight.value() * wingGlacisPercent.value())),
+      0-(glacisTopWidth.value() + waistWidth.value()) - (bumperWidth.value() - glacisTopWidth.value()) * wingGlacisPercent.value(),
+    ),
+
+    flankGlacisWingLeftShoulder: createVector(
+      0+(overallDepth.value()+stepDepth.value()),
+      0-q.gTopY,
+      0-(glacisTopWidth.value() -(waistWidth.value()*(Math.ceil(wingGlacisPercent.value()-1)))  + wingTopWidth.value()*Math.ceil(wingGlacisPercent.value()))
+    ),
+    flankGlacisTopLeft: createVector(
+      0+(overallDepth.value()+stepDepth.value()),
+      0-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepBottomHeight.value()),
+      0-((stepOuterPanelWidth.value()+stepCentralPanelWidth.value()+stepBetweenPanelWidth.value())),
+    ),
+    flankGlacisTopRight: createVector(
+      0+(overallDepth.value()+stepDepth.value()),
+      0-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value()) + stepBottomHeight.value()),
+      0+((stepOuterPanelWidth.value()+stepCentralPanelWidth.value()+stepBetweenPanelWidth.value())),
+    ),
+
+    stepTopLeft: createVector(
+      0+((stepDepth.value()+stepOuterEdgeDepth.value()+stepInnerEdgeDepth.value()+stepTopDepth.value())*pointHelpers.stepHasHeight)+(wingOuterEdgeDepth.value()*pointHelpers.stepNotHasHeight),
+      0-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepHeight.value()+stepBottomHeight.value()),
+      0-(stepOuterPanelWidth.value()+stepCentralPanelWidth.value()+stepBetweenPanelWidth.value()),
+    ),
+    stepTopRight: createVector(
+      0+((stepDepth.value()+stepOuterEdgeDepth.value()+stepInnerEdgeDepth.value()+stepTopDepth.value())*pointHelpers.stepHasHeight)+(wingOuterEdgeDepth.value()*pointHelpers.stepNotHasHeight),
+      0-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepHeight.value()+stepBottomHeight.value()),
+      0+(stepOuterPanelWidth.value()+stepCentralPanelWidth.value()+stepBetweenPanelWidth.value()),
+    ),
+    stepTopRightFlank: createVector(
+      0+(overallDepth.value()+stepDepth.value()),
+      0-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepHeight.value()+stepBottomHeight.value()),
+      0+(stepOuterPanelWidth.value()+stepCentralPanelWidth.value()+stepBetweenPanelWidth.value()),
+    ),
+    stepTopLeftFlank: createVector(
+      0+(overallDepth.value()+stepDepth.value()),
+      0-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepHeight.value()+stepBottomHeight.value()),
+      0-(stepOuterPanelWidth.value()+stepCentralPanelWidth.value()+stepBetweenPanelWidth.value()),
+    ),
+
+    stepBottomLeft: createVector(
+      0+((stepDepth.value()+stepOuterEdgeDepth.value()+stepInnerEdgeDepth.value())*pointHelpers.stepHasHeight)+(wingOuterEdgeDepth.value()*pointHelpers.stepNotHasHeight),
+      0-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepBottomHeight.value()),
+      0-(stepOuterPanelWidth.value()+stepCentralPanelWidth.value()+stepBetweenPanelWidth.value()),
+    ),
+    stepBottomRight: createVector(
+      0+((stepDepth.value()+stepOuterEdgeDepth.value()+stepInnerEdgeDepth.value())*pointHelpers.stepHasHeight)+(wingOuterEdgeDepth.value()*pointHelpers.stepNotHasHeight),
+      0-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepBottomHeight.value()),
+      0+(stepOuterPanelWidth.value()+stepCentralPanelWidth.value()+stepBetweenPanelWidth.value()),
+    ),
    
     
-    stepOuterWingTopLeft:[
-      tank.x+(stepDepth.value()+stepInnerEdgeDepth.value()+stepTopDepth.value())*pointHelpers.stepHasHeight,
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepHeight.value()+stepBottomHeight.value()),
-      tank.z-(stepBetweenPanelWidth.value()+stepCentralPanelWidth.value()),
-    ],
-    stepOuterWingBottomLeft:[
-      tank.x+(stepDepth.value()+stepInnerEdgeDepth.value())*pointHelpers.stepHasHeight,
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepBottomHeight.value()),
-      tank.z-(stepBetweenPanelWidth.value()+stepCentralPanelWidth.value()),
-    ],
+    stepOuterWingTopLeft: createVector(
+      0+(stepDepth.value()+stepInnerEdgeDepth.value()+stepTopDepth.value())*pointHelpers.stepHasHeight,
+      0-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepHeight.value()+stepBottomHeight.value()),
+      0-(stepBetweenPanelWidth.value()+stepCentralPanelWidth.value()),
+    ),
+    stepOuterWingBottomLeft: createVector(
+      0+(stepDepth.value()+stepInnerEdgeDepth.value())*pointHelpers.stepHasHeight,
+      0-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepBottomHeight.value()),
+      0-(stepBetweenPanelWidth.value()+stepCentralPanelWidth.value()),
+    ),
 
 
-    stepOuterWingTopRight:[
-      tank.x+(stepDepth.value()+stepInnerEdgeDepth.value()+stepTopDepth.value())*pointHelpers.stepHasHeight,
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepHeight.value()+stepBottomHeight.value()),
-      tank.z+(stepBetweenPanelWidth.value()+stepCentralPanelWidth.value()),
-    ],
-    stepOuterWingBottomRight:[
-      tank.x+(stepDepth.value()+stepInnerEdgeDepth.value())*pointHelpers.stepHasHeight,
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepBottomHeight.value()),
-      tank.z+(stepBetweenPanelWidth.value()+stepCentralPanelWidth.value()),
-    ],
+    stepOuterWingTopRight: createVector(
+      0+(stepDepth.value()+stepInnerEdgeDepth.value()+stepTopDepth.value())*pointHelpers.stepHasHeight,
+      0-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepHeight.value()+stepBottomHeight.value()),
+      0+(stepBetweenPanelWidth.value()+stepCentralPanelWidth.value()),
+    ),
+    stepOuterWingBottomRight: createVector(
+      0+(stepDepth.value()+stepInnerEdgeDepth.value())*pointHelpers.stepHasHeight,
+      0-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepBottomHeight.value()),
+      0+(stepBetweenPanelWidth.value()+stepCentralPanelWidth.value()),
+    ),
     
-    stepInnerWingTopLeft:[
-      tank.x+(stepDepth.value()+stepTopDepth.value())*pointHelpers.stepHasHeight,
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepHeight.value()+stepBottomHeight.value()),
-      tank.z-(stepCentralPanelWidth.value()),
-    ],
-    stepInnerWingBottomLeft:[
-      tank.x+(stepDepth.value())*pointHelpers.stepHasHeight,
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepBottomHeight.value()),
-      tank.z-(stepCentralPanelWidth.value()),
-    ],
+    stepInnerWingTopLeft: createVector(
+      0+(stepDepth.value()+stepTopDepth.value())*pointHelpers.stepHasHeight,
+      0-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepHeight.value()+stepBottomHeight.value()),
+      0-(stepCentralPanelWidth.value()),
+    ),
+    stepInnerWingBottomLeft: createVector(
+      0+(stepDepth.value())*pointHelpers.stepHasHeight,
+      0-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepBottomHeight.value()),
+      0-(stepCentralPanelWidth.value()),
+    ),
 
-    stepInnerWingTopRight:[
-      tank.x+(stepDepth.value()+stepTopDepth.value())*pointHelpers.stepHasHeight,
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepHeight.value()+stepBottomHeight.value()),
-      tank.z+(stepCentralPanelWidth.value()),
-    ],
-    stepInnerWingBottomRight:[
-      tank.x+(stepDepth.value())*pointHelpers.stepHasHeight,
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepBottomHeight.value()),
-      tank.z+(stepCentralPanelWidth.value()),
-    ],
-    stepFlankHelperRight:[
-      tank.x+(stepDepth.value()+pointHelpers.stepEdgeCalc()),
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepBottomHeight.value()),
-      tank.z+(glacisTopWidth.value() + wingTopWidth.value()),
-    ],
-    stepFlankHelperLeft:[
-      tank.x+(stepDepth.value()+pointHelpers.stepEdgeCalc()),
-      tank.y-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepBottomHeight.value()),
-      tank.z-(glacisTopWidth.value() + wingTopWidth.value()),
-    ],
+    stepInnerWingTopRight: createVector(
+      0+(stepDepth.value()+stepTopDepth.value())*pointHelpers.stepHasHeight,
+      0-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepHeight.value()+stepBottomHeight.value()),
+      0+(stepCentralPanelWidth.value()),
+    ),
+    stepInnerWingBottomRight: createVector(
+      0+(stepDepth.value())*pointHelpers.stepHasHeight,
+      0-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepBottomHeight.value()),
+      0+(stepCentralPanelWidth.value()),
+    ),
+    stepFlankHelperRight: createVector(
+      0+(stepDepth.value()+pointHelpers.stepEdgeCalc()),
+      0-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepBottomHeight.value()),
+      0+(glacisTopWidth.value() + wingTopWidth.value()),
+    ),
+    stepFlankHelperLeft: createVector(
+      0+(stepDepth.value()+pointHelpers.stepEdgeCalc()),
+      0-((bottomPlateHeight.value()+bumperHeight.value()+glacisHeight.value())+stepBottomHeight.value()),
+      0-(glacisTopWidth.value() + wingTopWidth.value()),
+    ),
   };
+  ambientLight(255)
+  directionalLight(255, 255, 255, 0, 1, 0);
   background(200);
 
-  lights();
-  for (let key in points){
-    point(points[key][0], points[key][1], points[key][2]);
-    // text(key, points[key][0], points[key][1], 20, 20);
-  }
-  
+  rotateY(60);
+  // lights();
+  // for (let key in p){
+  //   point(p[key].x, p[key].y, p[key].z);
+  //   // text(key, p[key][0], p[key][1], 20, 20);
+  // }
+  // ambientMaterial(100, 100, 100);
   // fill(0,0,0,63);
-  Object.keys(drawFront).forEach(shape => drawFront[shape](points));
+  Object.keys(drawFront).forEach(shape => drawFront[shape](p));
   if (showTreads.checked()){
-  Object.keys(drawTreads).forEach(shape => drawTreads[shape](points))};
+  Object.keys(drawTreads).forEach(shape => drawTreads[shape](p))};
   orbitControlEvent();
-  
 }
 
 function orbitControlEvent(){ 
